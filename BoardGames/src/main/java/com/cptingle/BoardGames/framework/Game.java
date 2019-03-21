@@ -242,13 +242,14 @@ public abstract class Game {
 	}
 
 	public boolean playerLeave(Player p) {
+		restorePlayer(p);
 		gm.removePlayer(p);
 		playerMap.remove(playerMap.inverse().get(p));
-		restorePlayer(p);
+		players.remove(p);
 		if (isRunning()) {
-			forceEnd();
+			end("The game is ending!");
 		}
-		return players.remove(p);
+		return true;
 	}
 
 	public void tellAllPlayers(String message) {
@@ -273,17 +274,28 @@ public abstract class Game {
 	}
 	
 	public void end() {
+		end(null);
+	}
+	
+	public void end(String message) {
+		if (message != null)
+			tellAllPlayers(message);
+		
+		running = false;
 		Player[] plyrs = players.toArray(new Player[players.size()]);
 		for (Player p : plyrs) {
 			playerLeave(p);
 		}
-//		for (int i = 0; i < plyrs.length; i++) {
-//			playerLeave(players[i]);
-//		}
-		players.clear();
-		playerMap.clear();
-		running = false;
 		resetGame();
+	}
+	
+	public void forceEnd() {
+		tellAllPlayers("Game is ending!");
+		running = false;
+		Player[] plyrs = players.toArray(new Player[players.size()]);
+		for (Player p : plyrs) {
+			playerLeave(p);
+		}
 	}
 
 	/**
@@ -316,9 +328,9 @@ public abstract class Game {
 	public abstract boolean canJoin(Player p);
 
 	protected abstract void begin();
+	
 
 	// Other methods
 	public abstract void init();
 
-	public abstract void forceEnd();
 }

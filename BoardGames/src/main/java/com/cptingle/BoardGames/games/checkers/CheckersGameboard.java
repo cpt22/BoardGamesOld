@@ -61,8 +61,7 @@ public class CheckersGameboard extends Gameboard {
 		isDoubleJumpMove = false;
 
 		if (anchorPoint != null && directionPoint != null) {
-			orient();
-			create();
+			reset();
 		} else {
 			game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " COULD NOT BE ENABLED");
 			if (anchorPoint == null)
@@ -70,6 +69,11 @@ public class CheckersGameboard extends Gameboard {
 			if (directionPoint == null)
 				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " DIR POINT NULL");
 		}
+	}
+	
+	public void reset() {
+		orient();
+		create();
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class CheckersGameboard extends Gameboard {
 	 * Create new board
 	 */
 	private void create() {
-		clearMaps();
+		clear();
 		for (int x = 0; x < 8; x++) {
 			for (int z = 0; z < 8; z++) {
 				GridPoint2D p = new GridPoint2D(x, z);
@@ -202,6 +206,14 @@ public class CheckersGameboard extends Gameboard {
 				fromSquare = tempSquare;
 				fromSquare.select();
 			}
+			
+			if (isDoubleJumpMove && fromSquare != null && tempSquare.equals(fromSquare)) {
+				game.tellAllPlayers("Forfeiting double jump");
+				fromSquare.unselect();
+				fromSquare = null;
+				isDoubleJumpMove = false;
+				thisGame().nextTurn();
+			}
 
 			if (tempSquare != null && fromSquare != null && tempSquare.getType() == SquareType.EMPTY) {
 				squareToGoTo = tempSquare;
@@ -243,7 +255,6 @@ public class CheckersGameboard extends Gameboard {
 		
 		if (Math.abs(deltaMove) == 2 && Math.abs(deltaSide) == 2) {
 			if (calculateDoubleJumpPossible(toSquare)) {
-				game.tellAllPlayers("ITS A DOUBLE JUMP TURN");
 				isDoubleJumpMove = true;
 				this.fromSquare = toSquare;
 				this.fromSquare.select();
@@ -304,7 +315,7 @@ public class CheckersGameboard extends Gameboard {
 		pts.add(sq.getPoint().translate(-2, -2));
 		boolean toReturn = false;
 		
-		for (int i = pts.size(); i > 0; i--) {
+		for (int i = pts.size() - 1; i >= 0; i--) {
 			GridPoint2D pt = pts.get(i);
 			if (pt.X() > 7 || pt.X() < 0 || pt.Z() > 7 || pt.Z() < 0) {
 				pts.remove(i);
@@ -316,9 +327,7 @@ public class CheckersGameboard extends Gameboard {
 		if (pts.size() > 0) {
 			return true;
 		}
-		
 		return false;
-		
 	}
 	
 	private boolean validJumpMovePoint(CheckerSquare fromSquare, GridPoint2D toPoint) {
@@ -377,10 +386,12 @@ public class CheckersGameboard extends Gameboard {
 
 	public void checkForWinner() {
 		if (p1Pieces.size() == 0) {
-			game.tellAllPlayers("Player 2 wins!");
+			game.getMessenger().tell(game.getPlayerMap().get(PlayerType.PLAYER_ONE), "You Lose!");
+			game.getMessenger().tell(game.getPlayerMap().get(PlayerType.PLAYER_TWO), "You Win!");
 			game.end();
 		} else if (p2Pieces.size() == 0) {
-			game.tellAllPlayers("Player 1 wins!");
+			game.getMessenger().tell(game.getPlayerMap().get(PlayerType.PLAYER_TWO), "You Lose!");
+			game.getMessenger().tell(game.getPlayerMap().get(PlayerType.PLAYER_ONE), "You Win!");
 			game.end();
 		}
 
@@ -417,7 +428,9 @@ public class CheckersGameboard extends Gameboard {
 		return new GridPoint2D(l.getBlockX() - anchorPoint.getBlockX(), l.getBlockZ() - anchorPoint.getBlockZ());
 	}
 
-	public void clearMaps() {
+	public void clear() {
+		p1Pieces.clear();
+		p2Pieces.clear();
 		locationPointMap.clear();
 	}
 	

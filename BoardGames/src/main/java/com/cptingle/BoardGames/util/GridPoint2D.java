@@ -89,7 +89,7 @@ public class GridPoint2D implements Serializable {
 	}
 	
 	public int hashCode() {
-		return Integer.parseInt("" + x + "" + z);
+		return Integer.parseInt("" + Math.abs(x) + "" + Math.abs(z));
 	}
 
 }

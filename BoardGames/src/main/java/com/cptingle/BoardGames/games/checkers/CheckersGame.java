@@ -66,13 +66,11 @@ public class CheckersGame extends Game {
 	}
 
 	@Override
-	public void forceEnd() {
-		running = false;
-		cleanAndResetGame();
-	}
-
-	private void cleanAndResetGame() {
-
+	public void resetGame() {
+		super.resetGame();
+		if (!plugin.isDisabling()) {
+			gameboard.reset();
+		}
 	}
 
 	@Override

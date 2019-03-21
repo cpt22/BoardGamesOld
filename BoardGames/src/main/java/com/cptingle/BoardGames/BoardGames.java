@@ -37,13 +37,17 @@ public class BoardGames extends JavaPlugin {
 	// Messaging
 	private Messenger messenger;
 	
+	// Other
+	private boolean isDisabling;
+	
 	@Override
 	public void onLoad() {
 
 	}
 
 	@Override
-	public void onEnable() {
+	public void onEnable() {		
+		isDisabling = false;
 		// Intialize config file
 		configFile = new File(getDataFolder(), "config.yml");
 		config = new YamlConfiguration();
@@ -76,6 +80,7 @@ public class BoardGames extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		isDisabling = true;
 		// Force end all games
 		if (gameMaster == null)
 			return;
@@ -202,6 +207,10 @@ public class BoardGames extends JavaPlugin {
 			return true;
 		}
 		return has((Player) sender, s);
+	}
+	
+	public boolean isDisabling() {
+		return isDisabling;
 	}
 
 }
