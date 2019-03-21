@@ -25,7 +25,7 @@ public class CheckersGame extends Game {
 	public CheckersGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.CHECKERS, name, world);
 		this.listener = new CheckersListener(plugin, this);
-		
+
 		this.p1Spawn = ConfigUtils.parseLocation(section, "coords.p1spawn", world);
 		this.p2Spawn = ConfigUtils.parseLocation(section, "coords.p2spawn", world);
 
@@ -40,9 +40,13 @@ public class CheckersGame extends Game {
 
 	public void setTurn(PlayerType p) {
 		turn = p;
-		messenger.tell(playerMap.get(p), Msg.GAME_YOUR_TURN);
+		if (gameboard.isDoubleJumpTurn()) {
+			messenger.tell(playerMap.get(p), "Make a double jump!");
+		} else {
+			messenger.tell(playerMap.get(p), Msg.GAME_YOUR_TURN);
+		}
 	}
-	
+
 	public CheckersGameboard getGameboard() {
 		return gameboard;
 	}
@@ -66,9 +70,9 @@ public class CheckersGame extends Game {
 		running = false;
 		cleanAndResetGame();
 	}
-	
+
 	private void cleanAndResetGame() {
-		
+
 	}
 
 	@Override
