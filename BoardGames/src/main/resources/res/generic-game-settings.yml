@@ -1,0 +1,15 @@
+world: ''
+type: ''
+enabled: true
+protect: true
+take-inv-while-in-game: false
+pvp-enabled: false
+allow-teleporting: false
+auto-respawn: true
+keep-exp: true
+food-regen: false
+lock-food-level: true
+player-time-in-game: world
+isolated-chat: false
+allowed-commands: /bg
+specific-settings: {}

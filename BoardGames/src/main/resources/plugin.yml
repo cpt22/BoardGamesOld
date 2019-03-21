@@ -1,0 +1,85 @@
+name: ${project.name}
+author: ctingle18
+main: com.cptingle.BoardGames.BoardGames
+version: ${project.version}
+api-version: 1.13
+commands:
+    bg:
+        description: Base command for BoardGames
+        usage: YOU HAVE AN ERROR
+    boardgames:
+        description: Base Command for BoardGames
+        usage: You Have An error
+permissions:
+    boardgames.player.disable:
+        description: Revokes access to all standar player commands
+        default: false
+        children:
+            boardgames.player.join: false
+            boardgames.player.leave: false
+            boardgames.player.gamelist: false
+    boardgames.player.join:
+        description: Join game command
+        default: true
+    boardgames.player.leave:
+        description: Leave game command
+        default: true
+    boardgames.player.gamelist:
+        description: List games command
+        default: true
+        
+    boardgames.admin:
+        description: Gives access to all admin commands
+        default: op
+        children:
+            boardgames.admin.enable: true
+            boardgames.admin.disable: true
+            boardgames.admin.reload: true
+            boardgames.admin.kick: true
+            boardgames.admin.reset: true
+            boardgames.admin.end: true
+    boardgames.admin.enable:
+        description: Enable a game
+        default: false
+    boardgames.admin.disable:
+        description: disable a game
+        default: false
+    boardgames.admin.reload:
+        description: Reload from config
+        default: false
+    boardgames.admin.kick:
+        description: Kick a player from a game
+        default: false
+    boardgames.admin.reset:
+        description: Reset a game
+        default: false
+    boardgames.admin.end:
+        description: End a game in progress
+        default: false
+        
+    boardgames.setup:
+        description: Gives access to all setup commands
+        default: op
+        children:
+            boardgames.setup.addgame: true
+            boardgames.setup.removegame: true
+            boardgames.setup.setpoint: true
+            boardgames.setup.setspawn: true
+            boardgames.setup.autogenerate: true
+    boardgames.setup.addgame:
+        description: Create a new game
+        default: false
+    boardgames.setup.removegame:
+        description: Delete a game
+        default: false
+    boardgames.setup.setpoint:
+        description: Set main point of a gameboard
+        default: false
+    boardgames.setup.setspawn:
+        description: Set spawn point of a gameboard
+        default: false  
+    boardgames.setup.autogenerate:
+        description: Generate a new gameboard
+        default: false
+        
+        

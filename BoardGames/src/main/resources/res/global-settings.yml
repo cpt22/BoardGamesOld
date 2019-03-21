@@ -1,0 +1,4 @@
+enabled: true
+allowed-commands: /list, /pl
+update-notification: true
+prefix: '&a[BoardGames] '
