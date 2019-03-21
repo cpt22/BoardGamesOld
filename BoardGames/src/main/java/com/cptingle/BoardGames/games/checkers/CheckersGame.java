@@ -41,7 +41,7 @@ public class CheckersGame extends Game {
 	public void setTurn(PlayerType p) {
 		turn = p;
 		if (gameboard.isDoubleJumpTurn()) {
-			messenger.tell(playerMap.get(p), "Make a double jump!");
+			messenger.tell(playerMap.get(p), "Make a double jump! ");
 		} else {
 			messenger.tell(playerMap.get(p), Msg.GAME_YOUR_TURN);
 		}
