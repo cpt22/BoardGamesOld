@@ -212,6 +212,7 @@ public class CheckersGameboard extends Gameboard {
 				}
 			}
 		} else {
+			
 			return;
 		}
 	}
