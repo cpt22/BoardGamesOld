@@ -207,13 +207,13 @@ public class CheckersGameboard extends Gameboard {
 				fromSquare.select();
 			}
 			
-			if (isDoubleJumpMove && fromSquare != null && tempSquare.equals(fromSquare)) {
+			/*if (isDoubleJumpMove && fromSquare != null && tempSquare.equals(fromSquare)) {
 				game.tellAllPlayers("Forfeiting double jump");
 				fromSquare.unselect();
 				fromSquare = null;
 				isDoubleJumpMove = false;
 				thisGame().nextTurn();
-			}
+			}*/
 
 			if (tempSquare != null && fromSquare != null && tempSquare.getType() == SquareType.EMPTY) {
 				squareToGoTo = tempSquare;

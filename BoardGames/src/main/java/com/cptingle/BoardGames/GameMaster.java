@@ -424,7 +424,7 @@ public class GameMaster {
 		ConfigurationSection section = makeSection(games, gameName);
 
 		// Add missing settings and remove obsolete ones
-		ConfigUtils.addMissingRemoveObsolete(plugin, "settings.yml", makeSection(section, "settings"));
+		ConfigUtils.addMissingRemoveObsolete(plugin, "generic-game-settings.yml", makeSection(section, "settings"));
 		section.set("settings.world", world.getName());
 		section.set("settings.type", type);
 		plugin.saveConfig();
