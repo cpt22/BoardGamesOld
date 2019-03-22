@@ -1,4 +1,4 @@
-package com.cptingle.BoardGames.games.checkers;
+package com.cptingle.BoardGames.games.tictactoe;
 
 import org.bukkit.Location;
 import org.bukkit.event.block.Action;
@@ -8,18 +8,17 @@ import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.framework.GameListener;
 
-public class CheckersListener extends GameListener {
+public class TicTacToeListener extends GameListener {
 
-	public CheckersListener(BoardGames plugin, Game game) {
+	public TicTacToeListener(BoardGames plugin, Game game) {
 		super(plugin, game);
 	}
-
+	
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (game.inEditMode()) {
+		if (game.inEditMode())
 			return;
-		}
-
+		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Location blockLocation = event.getClickedBlock().getLocation();
 			if (game.getRegion().contains(blockLocation) && game.isRunning()) {
@@ -27,10 +26,9 @@ public class CheckersListener extends GameListener {
 			}
 
 			if (game.isRunning()) {
-				((CheckersGame) game).getGameboard().blockClicked(blockLocation, event.getPlayer());
+				((TicTacToeGame) game).getGameboard().blockClicked(blockLocation, event.getPlayer());
 			}
 		}
-
 	}
 
 }

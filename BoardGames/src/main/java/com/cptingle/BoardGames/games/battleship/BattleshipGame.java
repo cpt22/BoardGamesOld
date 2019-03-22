@@ -46,4 +46,10 @@ public class BattleshipGame extends Game {
 		
 	}
 
+	@Override
+	public void nextTurn() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,7 +1,9 @@
 package com.cptingle.BoardGames.games;
 
 public enum GameType {
-	CHECKERS("checkers", "&c[Checkers]"), BATTLESHIP("battleship", "&b[Battleship]");
+	CHECKERS("checkers", "&c[Checkers]"), 
+	BATTLESHIP("battleship", "&b[Battleship]"),
+	TICTACTOE("tictactoe", "&f[TicTacToe]");
 
 	private String text;
 	private String prefix;

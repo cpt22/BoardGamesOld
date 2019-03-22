@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import com.cptingle.BoardGames.framework.Game;
+import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.PieceNotFoundException;
 import com.cptingle.BoardGames.util.GridPoint2D;
 

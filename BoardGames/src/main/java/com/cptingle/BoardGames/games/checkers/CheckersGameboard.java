@@ -1,10 +1,8 @@
 package com.cptingle.BoardGames.games.checkers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -12,85 +10,47 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Gameboard;
+import com.cptingle.BoardGames.games.MaterialType;
+import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.components.CheckerPiece;
 import com.cptingle.BoardGames.games.checkers.components.CheckerSquare;
-import com.cptingle.BoardGames.games.checkers.components.MaterialType;
-import com.cptingle.BoardGames.games.checkers.components.PlayerType;
 import com.cptingle.BoardGames.games.checkers.components.SquareType;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.InvalidMoveException;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.PieceNotFoundException;
 import com.cptingle.BoardGames.util.Direction;
 import com.cptingle.BoardGames.util.GridPoint2D;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 public class CheckersGameboard extends Gameboard {
 
 	// Game stuff
 	private CheckerSquare[][] board;
-	private BiMap<GridPoint2D, Location> locationPointMap;
 	private Set<CheckerPiece> p1Pieces;
 	private Set<CheckerPiece> p2Pieces;
-
-	// Locations stuff
-	private Location anchorPoint;
-	private Location directionPoint;
-	private Direction direction;
 
 	// State stuff
 	private CheckerSquare fromSquare;
 	private CheckerSquare squareToGoTo;
 	private boolean isDoubleJumpMove;
 
-	// Materials stuff
-	private Map<MaterialType, Material> gameMaterials;
-
 	public CheckersGameboard(CheckersGame game) {
 		super(game);
 
-		this.board = new CheckerSquare[8][8];
-		this.locationPointMap = HashBiMap.create();
-		this.p1Pieces = new HashSet<>();
-		this.p2Pieces = new HashSet<>();
-
-		initMaterials();
-
-		anchorPoint = game.getRegion().getB1();
-		directionPoint = game.getRegion().getB2();
-
 		isDoubleJumpMove = false;
 
-		if (anchorPoint != null && directionPoint != null) {
+		if (anchorPoint != null && directionPoint != null)
 			reset();
-		} else {
-			game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " COULD NOT BE ENABLED");
-			if (anchorPoint == null)
-				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " ANCHOR POINT NULL");
-			if (directionPoint == null)
-				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " DIR POINT NULL");
-		}
 	}
-	
+
+	@Override
 	public void reset() {
-		orient();
 		create();
 	}
 
-	/**
-	 * Orient board
-	 */
-	private void orient() {
-		if (anchorPoint.getBlockX() == directionPoint.getBlockX()) {
-			if (anchorPoint.getBlockZ() < directionPoint.getBlockZ()) {
-				direction = Direction.Z;
-			}
-		} else if (anchorPoint.getBlockZ() == directionPoint.getBlockZ()) {
-			if (anchorPoint.getBlockX() < directionPoint.getBlockX()) {
-				direction = Direction.X;
-			}
-		} else {
-			direction = Direction.X;
-		}
+	@Override
+	protected void init() {
+		this.board = new CheckerSquare[8][8];
+		this.p1Pieces = new HashSet<>();
+		this.p2Pieces = new HashSet<>();
 	}
 
 	/**
@@ -143,46 +103,23 @@ public class CheckersGameboard extends Gameboard {
 	}
 
 	// Materials
-	private void initMaterials() {
-		gameMaterials = new HashMap<>();
-		gameMaterials.put(MaterialType.RED_SQUARE,
-				Material.matchMaterial(game.getSpecificSettings().getString("red-square-block", "RED_CONCRETE")));
-		gameMaterials.put(MaterialType.BLACK_SQUARE,
-				Material.matchMaterial(game.getSpecificSettings().getString("black-square-block", "BLACK_CONCRETE")));
-		gameMaterials.put(MaterialType.P1_PIECE,
-				Material.matchMaterial(game.getSpecificSettings().getString("p1-piece-block", "ACACIA_FENCE")));
-		gameMaterials.put(MaterialType.P2_PIECE,
-				Material.matchMaterial(game.getSpecificSettings().getString("p2-piece-block", "DARK_OAK_FENCE")));
-		gameMaterials.put(MaterialType.KING,
-				Material.matchMaterial(game.getSpecificSettings().getString("king-block", "CREEPER_HEAD")));
-		gameMaterials.put(MaterialType.SELECTED,
-				Material.matchMaterial(game.getSpecificSettings().getString("selected-piece-block", "BIRCH_FENCE")));
+	protected void initMaterials() {
+		gameMaterials.put(MaterialType.RED_SQUARE, getMaterial(MaterialType.RED_SQUARE, "RED_CONCRETE"));
+		gameMaterials.put(MaterialType.BLACK_SQUARE, getMaterial(MaterialType.BLACK_SQUARE, "BLACK_CONCRETE"));
+		gameMaterials.put(MaterialType.P1_PIECE, getMaterial(MaterialType.P1_PIECE, "ACACIA_FENCE"));
+		gameMaterials.put(MaterialType.P2_PIECE, getMaterial(MaterialType.P2_PIECE, "DARK_OAK_FENCE"));
+		gameMaterials.put(MaterialType.KING, getMaterial(MaterialType.KING, "CREEPER_HEAD"));
+		gameMaterials.put(MaterialType.SELECTED, getMaterial(MaterialType.SELECTED, "BIRCH_FENCE"));
 	}
 
-	public Material getMaterial(MaterialType m) {
-		return gameMaterials.get(m);
-	}
-
-	public Direction getDirection() {
-		Direction toReturn = (direction == null) ? direction : Direction.X;
-		return toReturn;
-	}
-
-	public boolean isValidBoardClick(Location l) {
+	public boolean isLocationInBoard(Location l) {
 		if (l.getBlockY() > (anchorPoint.getBlockY() + 2) || l.getBlockY() < anchorPoint.getBlockY()) {
 			return false;
 		}
 		GridPoint2D gp = new GridPoint2D(l.getBlockX() - anchorPoint.getBlockX(),
 				l.getBlockZ() - anchorPoint.getBlockZ());
-		if (!locationPointMap.containsKey(gp)) {
-			return false;
-		}
 
-		return true;
-	}
-
-	private PlayerType turn() {
-		return thisGame().whoseTurn();
+		return locationPointMap.containsKey(gp);
 	}
 
 	public CheckersGame thisGame() {
@@ -195,38 +132,36 @@ public class CheckersGameboard extends Gameboard {
 	 * @param l
 	 * @param p
 	 */
-	public void blockClicked(Location l, Player p) {
-		if (game.getPlayerMap().inverse().get(p) == turn()) {
+	public boolean blockClicked(Location l, Player p) {
+		if (game.getPlayerMap().inverse().get(p) == game.turn()) {
 			GridPoint2D point = getPointFromLocation(l);
 			CheckerSquare tempSquare = board[point.getX()][point.getZ()];
 
-			if (!isDoubleJumpMove && tempSquare.getType() == SquareType.PIECE && tempSquare.getPlayer() == turn()) {
+			if (!isDoubleJumpMove && tempSquare.getType() == SquareType.PIECE
+					&& tempSquare.getPlayer() == game.turn()) {
 				if (fromSquare != null)
 					fromSquare.unselect();
 				fromSquare = tempSquare;
 				fromSquare.select();
 			}
-			
-			/*if (isDoubleJumpMove && fromSquare != null && tempSquare.equals(fromSquare)) {
-				game.tellAllPlayers("Forfeiting double jump");
-				fromSquare.unselect();
-				fromSquare = null;
-				isDoubleJumpMove = false;
-				thisGame().nextTurn();
-			}*/
+
+			/*
+			 * if (isDoubleJumpMove && fromSquare != null && tempSquare.equals(fromSquare))
+			 * { game.tellAllPlayers("Forfeiting double jump"); fromSquare.unselect();
+			 * fromSquare = null; isDoubleJumpMove = false; thisGame().nextTurn(); }
+			 */
 
 			if (tempSquare != null && fromSquare != null && tempSquare.getType() == SquareType.EMPTY) {
 				squareToGoTo = tempSquare;
 				try {
 					move(fromSquare, squareToGoTo);
+					return true;
 				} catch (InvalidMoveException e) {
-					// game.getMessenger().tell(p, "Invalid Move");
+					return false;
 				}
 			}
-		} else {
-			
-			return;
 		}
+		return true;
 	}
 
 	private void move(CheckerSquare fromSquare, CheckerSquare toSquare) {
@@ -244,7 +179,7 @@ public class CheckersGameboard extends Gameboard {
 		if (!doMove(fromSquare, toSquare, deltaMove, deltaSide)) {
 			throw new InvalidMoveException();
 		}
-		
+
 		fromSquare.transferPiece(toSquare);
 		checkForKings();
 
@@ -252,24 +187,24 @@ public class CheckersGameboard extends Gameboard {
 		this.squareToGoTo = null;
 
 		checkForWinner();
-		
+
 		if (Math.abs(deltaMove) == 2 && Math.abs(deltaSide) == 2) {
 			if (calculateDoubleJumpPossible(toSquare)) {
 				isDoubleJumpMove = true;
 				this.fromSquare = toSquare;
 				this.fromSquare.select();
-				thisGame().setTurn(turn());
+				thisGame().setTurn(game.turn());
 				return;
 			}
 		}
-		
+
 		isDoubleJumpMove = false;
 		thisGame().nextTurn();
 	}
 
 	private boolean doMove(CheckerSquare fromSquare, CheckerSquare toSquare, int deltaMove, int deltaSide) {
-		
-		if (!fromSquare.isKing() && deltaMove / turn().getDirection() < 0) {
+
+		if (!fromSquare.isKing() && deltaMove / game.turn().getDirection() < 0) {
 			return false;
 		}
 
@@ -295,7 +230,7 @@ public class CheckersGameboard extends Gameboard {
 		}
 		CheckerSquare midSquare = board[middlePoint.X()][middlePoint.Z()];
 
-		if (midSquare.getType() != SquareType.PIECE || midSquare.getPlayer() == turn())
+		if (midSquare.getType() != SquareType.PIECE || midSquare.getPlayer() == game.turn())
 			return false;
 
 		try {
@@ -313,8 +248,7 @@ public class CheckersGameboard extends Gameboard {
 		pts.add(sq.getPoint().translate(-2, 2));
 		pts.add(sq.getPoint().translate(2, -2));
 		pts.add(sq.getPoint().translate(-2, -2));
-		boolean toReturn = false;
-		
+
 		for (int i = pts.size() - 1; i >= 0; i--) {
 			GridPoint2D pt = pts.get(i);
 			if (pt.X() > 7 || pt.X() < 0 || pt.Z() > 7 || pt.Z() < 0) {
@@ -323,13 +257,13 @@ public class CheckersGameboard extends Gameboard {
 				pts.remove(i);
 			}
 		}
-		
+
 		if (pts.size() > 0) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private boolean validJumpMovePoint(CheckerSquare fromSquare, GridPoint2D toPoint) {
 		int deltaMove;
 		int deltaSide;
@@ -340,29 +274,31 @@ public class CheckersGameboard extends Gameboard {
 			deltaMove = toPoint.Z() - fromSquare.getPoint().Z();
 			deltaSide = toPoint.X() - fromSquare.getPoint().X();
 		}
-		
-		if (!fromSquare.isKing() && deltaMove / turn().getDirection() < 0) {
+
+		if (!fromSquare.isKing() && deltaMove / game.turn().getDirection() < 0) {
 			return false;
 		}
-		
+
 		GridPoint2D middlePoint;
 		CheckerSquare finalSquare;
 		if (direction == Direction.X) {
 			middlePoint = fromSquare.getPoint().translate(deltaMove / 2, deltaSide / 2);
-			finalSquare = board[fromSquare.getPoint().translate(deltaMove, deltaSide).X()][fromSquare.getPoint().translate(deltaMove, deltaSide).Z()];
+			finalSquare = board[fromSquare.getPoint().translate(deltaMove, deltaSide).X()][fromSquare.getPoint()
+					.translate(deltaMove, deltaSide).Z()];
 		} else {
 			middlePoint = fromSquare.getPoint().translate(deltaSide / 2, deltaMove / 2);
-			finalSquare = board[fromSquare.getPoint().translate(deltaSide, deltaMove).X()][fromSquare.getPoint().translate(deltaSide, deltaMove).Z()];
+			finalSquare = board[fromSquare.getPoint().translate(deltaSide, deltaMove).X()][fromSquare.getPoint()
+					.translate(deltaSide, deltaMove).Z()];
 
 		}
 		CheckerSquare midSquare = board[middlePoint.X()][middlePoint.Z()];
 
-		if (midSquare.getType() != SquareType.PIECE || midSquare.getPlayer() == turn())
+		if (midSquare.getType() != SquareType.PIECE || midSquare.getPlayer() == game.turn())
 			return false;
-		
+
 		if (finalSquare.getType() != SquareType.EMPTY)
 			return false;
-		
+
 		return true;
 	}
 
@@ -373,7 +309,7 @@ public class CheckersGameboard extends Gameboard {
 		if (piece == null)
 			throw new PieceNotFoundException();
 
-		if (turn() == PlayerType.PLAYER_ONE) {
+		if (game.turn() == PlayerType.PLAYER_ONE) {
 			removedPiece = p2Pieces.remove(piece);
 		} else {
 			removedPiece = p1Pieces.remove(piece);
@@ -418,22 +354,13 @@ public class CheckersGameboard extends Gameboard {
 		return board[p.X()][p.Z()];
 	}
 
-	public Location getLocationFromPoint(GridPoint2D p) {
-		return locationPointMap.get(p);
-	}
-
-	public GridPoint2D getPointFromLocation(Location l) {
-		// l.setY(anchorPoint.getBlockY());
-		// return locationPointMap.inverse().get(l);
-		return new GridPoint2D(l.getBlockX() - anchorPoint.getBlockX(), l.getBlockZ() - anchorPoint.getBlockZ());
-	}
-
-	public void clear() {
+	@Override
+	protected void clear() {
+		super.clear();
 		p1Pieces.clear();
 		p2Pieces.clear();
-		locationPointMap.clear();
 	}
-	
+
 	public boolean isDoubleJumpTurn() {
 		return this.isDoubleJumpMove;
 	}

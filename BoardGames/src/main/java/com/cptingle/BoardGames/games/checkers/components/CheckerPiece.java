@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import com.cptingle.BoardGames.framework.Game;
+import com.cptingle.BoardGames.games.MaterialType;
+import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.CheckersGameboard;
 import com.cptingle.BoardGames.util.Direction;
 import com.cptingle.BoardGames.util.GridPoint2D;

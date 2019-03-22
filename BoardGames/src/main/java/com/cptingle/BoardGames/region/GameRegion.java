@@ -320,6 +320,7 @@ public class GameRegion {
 			return;
 		case P1SPAWN:
 		case P2SPAWN:
+		case SPAWN:
 			setSpawn(point, loc);
 			return;
 		}
@@ -422,7 +423,7 @@ public class GameRegion {
 	
 	public void setOtherPoint(String point, Location loc) {
 		if (point == null || loc == null || point.equals(""))
-				throw new IllegalArgumentException("Invalid points and location");
+				throw new IllegalArgumentException("Invalid points and/or location");
 		
 		setLocation(oCoords, point, loc);
 		otherCoords.put(point, loc);

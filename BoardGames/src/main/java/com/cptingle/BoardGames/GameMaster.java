@@ -23,6 +23,7 @@ import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.battleship.BattleshipGame;
 import com.cptingle.BoardGames.games.checkers.CheckersGame;
+import com.cptingle.BoardGames.games.tictactoe.TicTacToeGame;
 import com.cptingle.BoardGames.messaging.Messenger;
 import com.cptingle.BoardGames.util.config.ConfigUtils;
 
@@ -487,6 +488,9 @@ public class GameMaster {
 			break;
 		case BATTLESHIP:
 			game = new BattleshipGame(plugin, section, name, world);
+			break;
+		case TICTACTOE:
+			game = new TicTacToeGame(plugin, section, name, world);
 			break;
 		}
 		return game;

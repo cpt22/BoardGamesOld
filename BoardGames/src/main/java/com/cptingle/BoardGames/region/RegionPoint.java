@@ -5,6 +5,7 @@ public enum RegionPoint {
 	P2,
 	B1,
 	B2,
+	SPAWN,
 	P1SPAWN,
 	P2SPAWN;
 	
