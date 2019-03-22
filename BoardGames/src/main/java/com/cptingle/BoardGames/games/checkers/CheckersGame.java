@@ -13,7 +13,6 @@ import com.cptingle.BoardGames.messaging.Msg;
 import com.cptingle.BoardGames.util.config.ConfigUtils;
 
 public class CheckersGame extends Game {
-
 	// Board
 	protected CheckersGameboard gameboard;
 	protected PlayerType turn;

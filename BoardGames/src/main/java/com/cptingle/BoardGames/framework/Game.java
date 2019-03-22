@@ -71,8 +71,7 @@ public abstract class Game {
 		this.name = name;
 		this.world = world;
 		this.settings = makeSection(section, "settings");
-		this.specificSettings = makeSection(settings, "specific-settings");
-		//ConfigUtils.addMissingRemoveObsolete(plugin, ", section);
+		this.specificSettings = makeSection(section, "specific-settings");
 		this.region = new GameRegion(section, this);
 		this.type = type;
 
@@ -84,8 +83,10 @@ public abstract class Game {
 		this.players = new HashSet<>();
 		this.playerMap = HashBiMap.create();
 		this.savedPlayers = new HashMap<>();
+		
+		String configPrefix = settings.getString("prefix", type.defaultPrefix());
 
-		createMessenger(specificSettings.getString("prefix", ""));
+		createMessenger(configPrefix.equals("") ? type.defaultPrefix() : configPrefix);
 
 		loadSettings();
 	}
@@ -113,6 +114,10 @@ public abstract class Game {
 
 	public ConfigurationSection getSettings() {
 		return settings;
+	}
+	
+	public ConfigurationSection getSpecificSettings() {
+		return specificSettings;
 	}
 
 	public World getWorld() {
@@ -328,9 +333,8 @@ public abstract class Game {
 	public abstract boolean canJoin(Player p);
 
 	protected abstract void begin();
-	
 
 	// Other methods
 	public abstract void init();
-
+	
 }

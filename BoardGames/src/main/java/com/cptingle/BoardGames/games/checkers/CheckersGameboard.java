@@ -146,17 +146,17 @@ public class CheckersGameboard extends Gameboard {
 	private void initMaterials() {
 		gameMaterials = new HashMap<>();
 		gameMaterials.put(MaterialType.RED_SQUARE,
-				Material.matchMaterial(game.getSettings().getString("red-square-block", "RED_CONCRETE")));
+				Material.matchMaterial(game.getSpecificSettings().getString("red-square-block", "RED_CONCRETE")));
 		gameMaterials.put(MaterialType.BLACK_SQUARE,
-				Material.matchMaterial(game.getSettings().getString("black-square-block", "BLACK_CONCRETE")));
+				Material.matchMaterial(game.getSpecificSettings().getString("black-square-block", "BLACK_CONCRETE")));
 		gameMaterials.put(MaterialType.P1_PIECE,
-				Material.matchMaterial(game.getSettings().getString("p1-piece-block", "ACACIA_FENCE")));
+				Material.matchMaterial(game.getSpecificSettings().getString("p1-piece-block", "ACACIA_FENCE")));
 		gameMaterials.put(MaterialType.P2_PIECE,
-				Material.matchMaterial(game.getSettings().getString("p2-piece-block", "DARK_OAK_FENCE")));
+				Material.matchMaterial(game.getSpecificSettings().getString("p2-piece-block", "DARK_OAK_FENCE")));
 		gameMaterials.put(MaterialType.KING,
-				Material.matchMaterial(game.getSettings().getString("king-block", "CREEPER_HEAD")));
+				Material.matchMaterial(game.getSpecificSettings().getString("king-block", "CREEPER_HEAD")));
 		gameMaterials.put(MaterialType.SELECTED,
-				Material.matchMaterial(game.getSettings().getString("selected-block", "BIRCH_FENCE")));
+				Material.matchMaterial(game.getSpecificSettings().getString("selected-piece-block", "BIRCH_FENCE")));
 	}
 
 	public Material getMaterial(MaterialType m) {

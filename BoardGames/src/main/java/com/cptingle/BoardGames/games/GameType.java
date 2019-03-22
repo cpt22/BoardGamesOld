@@ -1,12 +1,14 @@
 package com.cptingle.BoardGames.games;
 
 public enum GameType {
-	CHECKERS("checkers"), BATTLESHIP("battleship");
+	CHECKERS("checkers", "&c[Checkers]"), BATTLESHIP("battleship", "&b[Battleship]");
 
 	private String text;
+	private String prefix;
 
-	GameType(String text) {
+	GameType(String text, String prefix) {
 		this.text = text;
+		this.prefix = prefix;
 	}
 
 	public String toString() {
@@ -15,6 +17,10 @@ public enum GameType {
 
 	public String configName() {
 		return toString();
+	}
+	
+	public String defaultPrefix() {
+		return this.prefix;
 	}
 
 	public String getText() {

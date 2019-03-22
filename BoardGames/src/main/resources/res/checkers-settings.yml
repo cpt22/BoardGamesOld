@@ -1,1 +1,6 @@
-prefix: '&c[Checkers]'
+red-square-block: 'RED_CONCRETE'
+black-square-block: 'BLACK_CONCRETE'
+p1-piece-block: 'ACACIA_FENCE'
+p2-piece-block: 'DARK_OAK_FENCE'
+selected-piece-block: 'BIRCH_FENCE'
+king-block: 'CREEPER_HEAD'

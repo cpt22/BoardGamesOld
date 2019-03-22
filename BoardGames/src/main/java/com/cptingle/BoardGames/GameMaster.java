@@ -284,7 +284,6 @@ public class GameMaster {
 	public void loadSettings() {
 		ConfigurationSection section = plugin.getConfig().getConfigurationSection("global-settings");
 		ConfigUtils.addMissingRemoveObsolete(plugin, "global-settings.yml", section);
-
 	}
 
 	public void loadAllowedCommands() {
@@ -366,7 +365,7 @@ public class GameMaster {
 	public Game loadGame(String gamename) {
 		ConfigurationSection section = makeSection(config, "games." + gamename);
 		ConfigurationSection settings = makeSection(section, "settings");
-		ConfigurationSection gameSpecificSettings = makeSection(settings, "specific-settings");
+		ConfigurationSection specificSettings = makeSection(section, "specific-settings");
 		String worldName = settings.getString("world", "");
 		String type = settings.getString("type", "");
 		World world;
@@ -384,7 +383,7 @@ public class GameMaster {
 		}
 
 		ConfigUtils.addMissingRemoveObsolete(plugin, "generic-game-settings.yml", settings);
-		ConfigUtils.addMissingRemoveObsolete(plugin, type.toLowerCase() + "-settings.yml", gameSpecificSettings);
+		ConfigUtils.addIfEmpty(plugin, type.toLowerCase() + "-settings.yml", specificSettings);
 
 		Game game = createGame(type, plugin, section, gamename, world);
 
@@ -425,10 +424,11 @@ public class GameMaster {
 
 		// Add missing settings and remove obsolete ones
 		ConfigUtils.addMissingRemoveObsolete(plugin, "generic-game-settings.yml", makeSection(section, "settings"));
+		ConfigUtils.addIfEmpty(plugin, type.toLowerCase() + "-settings.yml", makeSection(section, "specific-settings"));
 		section.set("settings.world", world.getName());
 		section.set("settings.type", type);
 		plugin.saveConfig();
-		plugin.reloadConfig();
+
 		return (load ? loadGame(gameName) : null);
 	}
 

@@ -40,7 +40,7 @@ public class GameListCommand implements Command {
 		
 		String list = BGUtils.listToString(gameString, gm.getPlugin());
 		gm.getGlobalMessenger().tell(sender, Msg.MISC_LIST_GAMES.format(list));
-		return false;
+		return true;
 	}
 
 }
