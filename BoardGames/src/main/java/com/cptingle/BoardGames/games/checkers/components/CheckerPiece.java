@@ -6,14 +6,12 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.block.BlockFace;
 
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.CheckersGameboard;
-import com.cptingle.BoardGames.util.Direction;
 import com.cptingle.BoardGames.util.GridPoint2D;
 
 public class CheckerPiece {
@@ -101,13 +99,13 @@ public class CheckerPiece {
 		set();
 	}
 
-	public void setKingIfKing(Direction d) {
-		if (d == Direction.X) {
+	public void setKingIfKing(BlockFace direction) {
+		if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 			if (player == PlayerType.PLAYER_ONE && point.X() == 7)
 				setKing(true);
 			else if (player == PlayerType.PLAYER_TWO && point.X() == 0)
 				setKing(true);
-		} else if (d == Direction.Z) {
+		} else if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
 			if (player == PlayerType.PLAYER_ONE && point.Z() == 7)
 				setKing(true);
 			else if (player == PlayerType.PLAYER_TWO && point.Z() == 0)

@@ -1,9 +1,7 @@
 package com.cptingle.BoardGames.region;
 
 import static com.cptingle.BoardGames.util.config.ConfigUtils.makeSection;
-import static com.cptingle.BoardGames.util.config.ConfigUtils.parseDirection;
 import static com.cptingle.BoardGames.util.config.ConfigUtils.parseLocation;
-import static com.cptingle.BoardGames.util.config.ConfigUtils.setDirection;
 import static com.cptingle.BoardGames.util.config.ConfigUtils.setLocation;
 
 import java.util.ArrayList;
@@ -19,194 +17,135 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.PointCategory;
+import com.cptingle.BoardGames.util.BGUtils;
+import com.cptingle.BoardGames.util.Enums;
 
-public class GameRegion {
+@Deprecated
+public class GameRegionOld {
 
 	private Game game;
 	private World world;
 
-	private Location lastP1, lastP2;
-	private Location p1, p2;
-	private Map<RegionPoint, Location> coordsMap;
-	private Map<RegionPoint, BlockFace> dirsMap;
-	private Map<RegionPoint, Location> spawnsMap;
+	private Location lastP1, lastP2, lastB1, lastB2;
+	private Location p1, p2, b1, b2, p1Spawn, p2Spawn;
+	private Map<String, Location> coordsMap;
+	private Map<String, BlockFace> dirsMap;
 
 	private boolean setup;
 
 	private ConfigurationSection coords;
-	private ConfigurationSection locations;
-	private ConfigurationSection directions;
-	private ConfigurationSection spawns;
+	private ConfigurationSection oCoords;
 
-	public GameRegion(ConfigurationSection section, Game game) {
+	public GameRegionOld(ConfigurationSection section, Game game) {
 		this.game = game;
 		refreshWorld();
 
 		this.coords = makeSection(section, "coords");
-		this.locations = makeSection(coords, "locations");
-		this.directions = makeSection(coords, "directions");
-		this.spawns = makeSection(coords, "spawns");
-
-		this.setup = false;
-
+		this.oCoords = makeSection(coords, "other");
+		
 		coordsMap = new HashMap<>();
 		dirsMap = new HashMap<>();
-		spawnsMap = new HashMap<>();
 
 		reloadAll();
 	}
 
-	/**
-	 * Refreshes world from configuration
-	 */
+	public void reloadAll() {
+		reloadRegion();
+		reloadSpawns();
+		//reloadOtherCoords();
+		verifyData();
+	}
+
 	public void refreshWorld() {
 		this.world = game.getWorld();
 	}
 
-	/**
-	 * Reload all points from configuration
-	 */
-	public void reloadAll() {
-		reloadRegion();
-		reloadCoords();
-		reloadDirections();
-		reloadSpawns();
-
-		verifyData();
-	}
-
-	/**
-	 * Reloads region from configuration
-	 */
 	public void reloadRegion() {
 		p1 = parseLocation(coords, "p1", world);
 		p2 = parseLocation(coords, "p2", world);
+
+		b1 = parseLocation(coords, "b1", world);
+		b2 = parseLocation(coords, "b2", world);
 	}
 
-	/**
-	 * Loads other coordinates from configuration
-	 */
-	public void reloadCoords() {
-		coordsMap.clear();
-		for (String key : locations.getKeys(false)) {
-			RegionPoint k = game.getRegionPointFromString(key);
-			if (k != null) {
-				coordsMap.put(k, parseLocation(locations, key, world));
-			}
-		}
-	}
-
-	/**
-	 * Reload directions and match to a point
-	 */
-	public void reloadDirections() {
-		dirsMap.clear();
-		for (String key : directions.getKeys(false)) {
-			RegionPoint k = game.getRegionPointFromString(key);
-			if (k != null) {
-				dirsMap.put(k, parseDirection(directions, key));
-			}
-		}
-	}
-
-	/**
-	 * Reload spawnpoints from configuration
-	 */
 	public void reloadSpawns() {
-		spawnsMap.clear();
-		for (String key : spawns.getKeys(false)) {
-			RegionPoint k = game.getRegionPointFromString(key);
-			if (k != null) {
-				spawnsMap.put(k, parseLocation(spawns, key, world));
+		p1Spawn = parseLocation(coords, "p1Spawn", world);
+		p2Spawn = parseLocation(coords, "p2Spawn", world);
+	}
+	
+	public void reloadOtherCoords() {
+		coordsMap.clear();
+		for (String key: oCoords.getKeys(true)) {
+			Location loc = parseLocation(oCoords, key, world);
+			coordsMap.put(key, loc);
+		}
+	}
+
+	public void verifyData() {
+		setup = (p1 != null && p2 != null && b1 != null && b2 != null && p1Spawn != null && p2Spawn != null);
+	}
+
+	public void checkData(BoardGames plugin, CommandSender s, boolean ready, boolean region, boolean spawns) {
+		verifyData();
+
+		List<String> list = new ArrayList<>();
+
+		// Region pts
+		if (region) {
+			if (p1 == null)
+				list.add("p1");
+			if (p2 == null)
+				list.add("p2");
+			if (b1 == null)
+				list.add("b1");
+			if (b2 == null)
+				list.add("b2");
+			if (!list.isEmpty()) {
+				game.getGlobalMessenger().tell(s, "Missing region points: " + BGUtils.listToString(list, plugin));
+				list.clear();
 			}
 		}
+
+		// Spawns
+		if (spawns) {
+			if (p1Spawn == null)
+				list.add("p2spawn");
+			if (p2Spawn == null)
+				list.add("p2spawn");
+			if (!list.isEmpty()) {
+				game.getGlobalMessenger().tell(s, "Missing spawn points: " + BGUtils.listToString(list, plugin));
+				list.clear();
+			}
+		}
+
+		// Ready?
+		if (ready && setup) {
+			game.getGlobalMessenger().tell(s, "Game is ready to be used!");
+		}
 	}
 
-	/**
-	 * Verify data and check if the region is fully setup
-	 */
-	public void verifyData() {
-		boolean coordsPresent = true;
-		RegionPoint[] coordTypes = game.getPointTypesWithCategory(PointCategory.POINT);
-		for (RegionPoint pt : coordTypes) {
-			if (coordsMap.get(pt) == null)
-				coordsPresent = false;
-		}
-
-		boolean coordsDirsPresent = true;
-		RegionPoint[] coordDirTypes = game.getPointTypesWithCategory(PointCategory.POINT_DIR);
-		for (RegionPoint pt : coordDirTypes) {
-			if (dirsMap.get(pt) == null || coordsMap.get(pt) == null)
-				coordsDirsPresent = false;
-		}
-
-		boolean spawnsPresent = true;
-		RegionPoint[] spawnTypes = game.getPointTypesWithCategory(PointCategory.SPAWN);
-		for (RegionPoint pt : spawnTypes) {
-			if (spawnsMap.get(pt) == null)
-				spawnsPresent = false;
-		}
-
-		setup = p1 != null && p2 != null && coordsPresent && coordsDirsPresent && spawnsPresent;
-	}
-
-	/**
-	 * Gets if protected region is defined
-	 * 
-	 * @return
-	 */
 	public boolean isDefined() {
 		return (p1 != null && p2 != null);
 	}
 
-	/**
-	 * Gets if the region is fully set up
-	 */
+	public boolean isBoardDefined() {
+		return (b1 != null && b2 != null);
+	}
+
 	public boolean isSetup() {
 		return setup;
 	}
 
-	/**
-	 * Get a spawn for a given PointType
-	 * 
-	 * @param pt
-	 * @return
-	 */
-	public Location getSpawn(RegionPoint pt) {
-		return spawnsMap.get(pt);
+	public boolean isSpawn(Location l) {
+		return (l.equals(p1Spawn) || l.equals(p2Spawn));
 	}
 
-	/**
-	 * Gets a point for a given PointType
-	 * 
-	 * @param pt
-	 * @return
-	 */
-	public Location getPoint(RegionPoint pt) {
-		return coordsMap.get(pt);
-	}
-
-	/**
-	 * Gets a direction associated with a given point
-	 * 
-	 * @param pt
-	 * @return
-	 */
-	public BlockFace getDirection(RegionPoint pt) {
-		return dirsMap.get(pt);
-	}
-
-	/**
-	 * Gets if a location is contained within the games protected region
-	 * 
-	 * @param l
-	 * @return
-	 */
 	public boolean contains(Location l) {
 		if (!l.getWorld().getName().equals(world.getName()) || !isDefined()) {
 			return false;
@@ -221,13 +160,19 @@ public class GameRegion {
 				&& (y >= p1.getBlockY() && y <= p2.getBlockY()));
 	}
 
-	/**
-	 * Gets if a location is contained within a radius of the games protected region
-	 * 
-	 * @param l
-	 * @param radius
-	 * @return
-	 */
+	public boolean boardContains(Location l) {
+		if (!l.getWorld().getName().equals(world.getName()) || !isDefined()) {
+			return false;
+		}
+
+		int x = l.getBlockX();
+		int y = l.getBlockY();
+		int z = l.getBlockZ();
+
+		return ((x >= b1.getBlockX() && x <= b2.getBlockX()) && (z >= b1.getBlockZ() && z <= b2.getBlockZ())
+				&& (y >= b1.getBlockY() && y <= b2.getBlockY() + 2));
+	}
+
 	public boolean contains(Location l, int radius) {
 		if (!l.getWorld().getName().equals(world.getName()) || !isDefined()) {
 			return false;
@@ -351,64 +296,33 @@ public class GameRegion {
 		return result;
 	}
 
-	/**
-	 * Set the location for a RegionPoint
-	 * 
-	 * @param point
-	 * @param loc
-	 */
-	public void set(RegionPoint point, Location loc) {
-		set(point, loc, null);
+	public Location getP1Spawn() {
+		return p1Spawn;
 	}
 
-	/**
-	 * Set the location for a RegionPoint
-	 * 
-	 * @param point
-	 * @param loc
-	 */
-	public void set(String point, Location loc) {
-		set(point, loc, null);
+	public Location getP2Spawn() {
+		return p2Spawn;
 	}
 
-	/**
-	 * Set the location for a RegionPoint
-	 * 
-	 * @param point
-	 * @param loc
-	 * @param dir
-	 */
-	public void set(String point, Location loc, BlockFace dir) {
-		// Get point
-		RegionPoint rp = game.getRegionPointFromString(point);
-		RegionPointMaster rpm = (RegionPointMaster) RegionPointMaster.matchString(point);
-		if (rp == null && rpm == null)
-			throw new IllegalArgumentException("Invalid region point '" + point + "'");
-
-		if (rpm != null)
-			setRegionPoint(rpm, loc);
-		else
-			set(rp, loc, dir);
+	public Location getB1() {
+		return b1;
 	}
 
-	/**
-	 * Set the location for a RegionPoint
-	 * 
-	 * @param point
-	 * @param loc
-	 * @param dir
-	 */
-	public void set(RegionPoint point, Location loc, BlockFace dir) {
-		switch (point.getCategory()) {
-		case POINT:
+	public Location getB2() {
+		return b2;
+	}
+
+	public void set(RegionPointOld point, Location loc) {
+		// Act based on the point
+		switch (point) {
+		case P1:
+		case P2:
+		case B1:
+		case B2:
 			setPoint(point, loc);
 			return;
-		case POINT_DIR:
-			if (loc != null)
-				setPoint(point, loc);
-			if (dir != null)
-				setDir(point, dir);
-			return;
+		case P1SPAWN:
+		case P2SPAWN:
 		case SPAWN:
 			setSpawn(point, loc);
 			return;
@@ -417,9 +331,9 @@ public class GameRegion {
 		throw new IllegalArgumentException("Invalid region point!");
 	}
 
-	private void setRegionPoint(RegionPointMaster point, Location l) {
+	private void setPoint(RegionPointOld point, Location l) {
 		// Lower and upper locations
-		RegionPointMaster r1, r2;
+		RegionPointOld r1, r2;
 		Location lower, upper;
 
 		/*
@@ -439,15 +353,29 @@ public class GameRegion {
 			lastP1 = l.clone();
 			lower = lastP1.clone();
 			upper = (lastP2 != null ? lastP2.clone() : p2);
-			r1 = RegionPointMaster.P1;
-			r2 = RegionPointMaster.P2;
+			r1 = RegionPointOld.P1;
+			r2 = RegionPointOld.P2;
 			break;
 		case P2:
 			lastP2 = l.clone();
 			lower = (lastP1 != null ? lastP1.clone() : p1);
 			upper = lastP2.clone();
-			r1 = RegionPointMaster.P1;
-			r2 = RegionPointMaster.P2;
+			r1 = RegionPointOld.P1;
+			r2 = RegionPointOld.P2;
+			break;
+		case B1:
+			lastB1 = l.clone();
+			lower = lastB1.clone();
+			upper = (lastB2 != null ? lastB2.clone() : b2);
+			r1 = RegionPointOld.B1;
+			r2 = RegionPointOld.B2;
+			break;
+		case B2:
+			lastB2 = l.clone();
+			lower = (lastB1 != null ? lastB1.clone() : b1);
+			upper = lastB2.clone();
+			r1 = RegionPointOld.B1;
+			r2 = RegionPointOld.B2;
 			break;
 		default:
 			lower = upper = null;
@@ -486,33 +414,43 @@ public class GameRegion {
 		verifyData();
 	}
 
-	private void setPoint(RegionPoint point, Location loc) {
-		if (point == null || loc == null)
-			throw new IllegalArgumentException("Invalid point and/or location");
+	public void set(String point, Location loc) {
+		// Get the region point enum
+		RegionPointOld rp = Enums.getEnumFromString(RegionPointOld.class, point);
+		if (rp == null)
+			throw new IllegalArgumentException("Invalid region point '" + point + "'");
 
-		setLocation(locations, point.configName(), loc);
+		// Then delegate
+		set(rp, loc);
+	}
+	
+	public void setOtherPoint(String point, Location loc) {
+		if (point == null || loc == null || point.equals(""))
+				throw new IllegalArgumentException("Invalid points and/or location");
+		
+		setLocation(oCoords, point, loc);
+		coordsMap.put(point, loc);
 		save();
-
-		reloadCoords();
+	}
+	
+	public Location getOtherPoint(String point) {
+		if (point == null || point.equals(""))
+			throw new IllegalArgumentException("Point can not be null or empty");
+		reloadOtherCoords();
+		return coordsMap.get(point);
+	}
+	
+	public Map<String, Location> getOtherCoords() {
+		reloadOtherCoords();
+		return coordsMap;
 	}
 
-	private void setDir(RegionPoint point, BlockFace dir) {
-		if (point == null || dir == null)
-			throw new IllegalArgumentException("Invalid point and/or location");
-
-		setDirection(directions, point.configName(), dir);
+	public void setSpawn(RegionPointOld point, Location l) {
+		// Set the point and save
+		setLocation(coords, point.toString(), l);
 		save();
 
-		reloadDirections();
-	}
-
-	private void setSpawn(RegionPoint point, Location loc) {
-		if (point == null || loc == null)
-			throw new IllegalArgumentException("Invalid point and/or location");
-
-		setLocation(spawns, point.configName(), loc);
-		save();
-
+		// Then reload warps
 		reloadSpawns();
 	}
 
@@ -527,15 +465,22 @@ public class GameRegion {
 		showBlocks(p, getFramePoints(p1, p2));
 	}
 
-	public void showSpawns(Player p) {
-		if (spawnsMap.size() == 0)
-			game.getGlobalMessenger().tell(p, "NO SPAWNS");
-
-		for (RegionPoint rp : spawnsMap.keySet()) {
-			Location l = spawnsMap.get(rp);
-			if (l != null)
-				showBlock(p, l, Material.BLUE_WOOL);
+	public void showBoardRegion(Player p) {
+		if (!isBoardDefined()) {
+			return;
 		}
+		showBlocks(p, getFramePoints(b1, b2));
+	}
+
+	public void showSpawns(Player p) {
+		if (p1Spawn != null) {
+			showBlock(p, p1Spawn, Material.BLUE_WOOL);
+		}
+		if (p2Spawn != null) {
+			showBlock(p, p2Spawn, Material.RED_WOOL);
+		}
+		if (p1Spawn == null && p2Spawn == null)
+			game.getGlobalMessenger().tell(p, "NO SPAWNS");
 	}
 
 	public void showBlock(final Player p, final Location loc, final Material m) {

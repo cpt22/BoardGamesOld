@@ -8,6 +8,7 @@ import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.framework.Gameboard;
 import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
+import com.cptingle.BoardGames.games.tictactoe.components.TicTacToeRegionPoint;
 import com.cptingle.BoardGames.util.GridPoint2D;
 
 public class TicTacToeGameboard extends Gameboard {
@@ -18,7 +19,7 @@ public class TicTacToeGameboard extends Gameboard {
 	private PlayerType[][] board;
 
 	public TicTacToeGameboard(Game game) {
-		super(game);
+		super(game, TicTacToeRegionPoint.BOARD);
 
 		int size = game.getSpecificSettings().getInt("board-size", 3);
 
@@ -26,7 +27,7 @@ public class TicTacToeGameboard extends Gameboard {
 			BOARD_SIZE = size;
 		
 		init();
-		if (anchorPoint != null && directionPoint != null)
+		if (anchorPoint != null && direction != null)
 			reset();
 	}
 

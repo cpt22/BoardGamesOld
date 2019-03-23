@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Gameboard;
@@ -14,10 +15,10 @@ import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.components.CheckerPiece;
 import com.cptingle.BoardGames.games.checkers.components.CheckerSquare;
+import com.cptingle.BoardGames.games.checkers.components.CheckersRegionPoint;
 import com.cptingle.BoardGames.games.checkers.components.SquareType;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.InvalidMoveException;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.PieceNotFoundException;
-import com.cptingle.BoardGames.util.Direction;
 import com.cptingle.BoardGames.util.GridPoint2D;
 
 public class CheckersGameboard extends Gameboard {
@@ -33,11 +34,11 @@ public class CheckersGameboard extends Gameboard {
 	private boolean isDoubleJumpMove;
 
 	public CheckersGameboard(CheckersGame game) {
-		super(game);
+		super(game, CheckersRegionPoint.BOARD);
 
 		isDoubleJumpMove = false;
 
-		if (anchorPoint != null && directionPoint != null)
+		if (anchorPoint != null && direction != null)
 			reset();
 	}
 
@@ -74,7 +75,7 @@ public class CheckersGameboard extends Gameboard {
 
 				int t1;
 				int t2;
-				if (direction == Direction.Z) {
+				if (direction != BlockFace.EAST && direction != BlockFace.WEST) {
 					t1 = z;
 					t2 = x;
 				} else {
@@ -168,7 +169,7 @@ public class CheckersGameboard extends Gameboard {
 		int deltaMove = 0;
 		int deltaSide = 0;
 
-		if (direction == Direction.X) {
+		if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 			deltaMove = toSquare.getPoint().X() - fromSquare.getPoint().X();
 			deltaSide = toSquare.getPoint().Z() - fromSquare.getPoint().Z();
 		} else {
@@ -223,7 +224,7 @@ public class CheckersGameboard extends Gameboard {
 
 	private boolean doJumpMove(CheckerSquare fromSquare, CheckerSquare toSquare, int deltaMove, int deltaSide) {
 		GridPoint2D middlePoint = null;
-		if (direction == Direction.X) {
+		if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 			middlePoint = fromSquare.getPoint().translate(deltaMove / 2, deltaSide / 2);
 		} else {
 			middlePoint = fromSquare.getPoint().translate(deltaSide / 2, deltaMove / 2);
@@ -267,7 +268,7 @@ public class CheckersGameboard extends Gameboard {
 	private boolean validJumpMovePoint(CheckerSquare fromSquare, GridPoint2D toPoint) {
 		int deltaMove;
 		int deltaSide;
-		if (direction == Direction.X) {
+		if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 			deltaMove = toPoint.X() - fromSquare.getPoint().X();
 			deltaSide = toPoint.Z() - fromSquare.getPoint().Z();
 		} else {
@@ -281,7 +282,7 @@ public class CheckersGameboard extends Gameboard {
 
 		GridPoint2D middlePoint;
 		CheckerSquare finalSquare;
-		if (direction == Direction.X) {
+		if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 			middlePoint = fromSquare.getPoint().translate(deltaMove / 2, deltaSide / 2);
 			finalSquare = board[fromSquare.getPoint().translate(deltaMove, deltaSide).X()][fromSquare.getPoint()
 					.translate(deltaMove, deltaSide).Z()];

@@ -1,16 +1,11 @@
 package com.cptingle.BoardGames.region;
 
-public enum RegionPoint {
-	P1,
-	P2,
-	B1,
-	B2,
-	SPAWN,
-	P1SPAWN,
-	P2SPAWN;
+import com.cptingle.BoardGames.games.PointCategory;
+
+public interface RegionPoint {
 	
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}
+	public PointCategory getCategory();
+	
+	public String configName();
+	
 }

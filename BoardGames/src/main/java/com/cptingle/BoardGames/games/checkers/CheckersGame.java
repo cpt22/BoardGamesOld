@@ -9,8 +9,9 @@ import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.PlayerType;
+import com.cptingle.BoardGames.games.checkers.components.CheckersRegionPoint;
 import com.cptingle.BoardGames.messaging.Msg;
-import com.cptingle.BoardGames.util.config.ConfigUtils;
+import com.cptingle.BoardGames.region.RegionPoint;
 
 public class CheckersGame extends Game {
 	// Board
@@ -22,8 +23,8 @@ public class CheckersGame extends Game {
 
 		gameboard = new CheckersGameboard(this);
 
-		Location p1Spawn = ConfigUtils.parseLocation(section, "coords.p1spawn", world);
-		Location p2Spawn = ConfigUtils.parseLocation(section, "coords.p2spawn", world);
+		Location p1Spawn = getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN);
+		Location p2Spawn = getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN);
 
 		if (p1Spawn == null || p2Spawn == null) {
 			setEnabled(false);
@@ -61,6 +62,16 @@ public class CheckersGame extends Game {
 	public void init() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public RegionPoint getRegionPointFromString(String s) {
+		return CheckersRegionPoint.matchString(s);
+	}
+	
+	@Override 
+	public RegionPoint[] getAllRegionPoints() {
+		return ((RegionPoint[]) CheckersRegionPoint.values());
 	}
 
 	@Override

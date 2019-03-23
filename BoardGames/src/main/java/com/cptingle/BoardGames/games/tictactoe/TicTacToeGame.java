@@ -10,7 +10,8 @@ import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.framework.Gameboard;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.PlayerType;
-import com.cptingle.BoardGames.util.config.ConfigUtils;
+import com.cptingle.BoardGames.games.tictactoe.components.TicTacToeRegionPoint;
+import com.cptingle.BoardGames.region.RegionPoint;
 
 public class TicTacToeGame extends Game {
 	// Board
@@ -23,7 +24,7 @@ public class TicTacToeGame extends Game {
 		this.listener = new TicTacToeListener(plugin, this);
 		this.gameboard = new TicTacToeGameboard(this);
 
-		Location spawn = ConfigUtils.parseLocation(section, "coords.spawn", world);
+		Location spawn = getRegion().getSpawn(TicTacToeRegionPoint.SPAWN);//ConfigUtils.parseLocation(section, "coords.spawn", world);
 
 		if (spawn == null) {
 			setEnabled(false);
@@ -100,6 +101,16 @@ public class TicTacToeGame extends Game {
 			setTurn(PlayerType.PLAYER_TWO);
 		else
 			setTurn(PlayerType.PLAYER_ONE);
+	}
+
+	@Override
+	public RegionPoint getRegionPointFromString(String s) {
+		return ((RegionPoint) TicTacToeRegionPoint.matchString(s));
+	}
+	
+	@Override 
+	public RegionPoint[] getAllRegionPoints() {
+		return ((RegionPoint[]) TicTacToeRegionPoint.values());
 	}
 
 }

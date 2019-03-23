@@ -3,6 +3,7 @@ package com.cptingle.BoardGames.util.config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,120 +16,143 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Set;
 
-public class ConfigUtils
-{
-    public static void addIfEmpty(Plugin plugin, String resource, ConfigurationSection section) {
-        process(plugin, resource, section, true, false);
-    }
+public class ConfigUtils {
+	public static void addIfEmpty(Plugin plugin, String resource, ConfigurationSection section) {
+		process(plugin, resource, section, true, false);
+	}
 
-    public static void addMissingRemoveObsolete(Plugin plugin, String resource, ConfigurationSection section) {
-        process(plugin, resource, section, false, true);
-    }
+	public static void addMissingRemoveObsolete(Plugin plugin, String resource, ConfigurationSection section) {
+		process(plugin, resource, section, false, true);
+	}
 
-    public static void addMissingRemoveObsolete(File file, YamlConfiguration defaults, FileConfiguration config) {
-        try {
-            process(defaults, config, false, true);
-            config.save(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	public static void addMissingRemoveObsolete(File file, YamlConfiguration defaults, FileConfiguration config) {
+		try {
+			process(defaults, config, false, true);
+			config.save(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    private static void process(Plugin plugin, String resource, ConfigurationSection section, boolean addOnlyIfEmpty, boolean removeObsolete) {
-        try {
-            YamlConfiguration defaults = new YamlConfiguration();
-            defaults.load(new InputStreamReader(plugin.getResource("res/" + resource)));
+	private static void process(Plugin plugin, String resource, ConfigurationSection section, boolean addOnlyIfEmpty,
+			boolean removeObsolete) {
+		try {
+			YamlConfiguration defaults = new YamlConfiguration();
+			defaults.load(new InputStreamReader(plugin.getResource("res/" + resource)));
 
-            process(defaults, section, addOnlyIfEmpty, removeObsolete);
-            plugin.saveConfig();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+			process(defaults, section, addOnlyIfEmpty, removeObsolete);
+			plugin.saveConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    private static void process(YamlConfiguration defaults, ConfigurationSection section, boolean addOnlyIfEmpty, boolean removeObsolete) {
-        Set<String> present = section.getKeys(true);
-        Set<String> required = defaults.getKeys(true);
-        if (!addOnlyIfEmpty || present.isEmpty()) {
-            for (String req : required) {
-                if (!present.remove(req)) {
-                    section.set(req, defaults.get(req));
-                }
-            }
-        }
-        if (removeObsolete) {
-            for (String obs : present) {
-                section.set(obs, null);
-            }
-        }
-    }
+	private static void process(YamlConfiguration defaults, ConfigurationSection section, boolean addOnlyIfEmpty,
+			boolean removeObsolete) {
+		Set<String> present = section.getKeys(true);
+		Set<String> required = defaults.getKeys(true);
+		if (!addOnlyIfEmpty || present.isEmpty()) {
+			for (String req : required) {
+				if (!present.remove(req)) {
+					section.set(req, defaults.get(req));
+				}
+			}
+		}
+		if (removeObsolete) {
+			for (String obs : present) {
+				section.set(obs, null);
+			}
+		}
+	}
 
-    public static ConfigurationSection makeSection(ConfigurationSection config, String section) {
-        if (!config.contains(section)) {
-            return config.createSection(section);
-        } else {
-            return config.getConfigurationSection(section);
-        }
-    }
+	public static ConfigurationSection makeSection(ConfigurationSection config, String section) {
+		if (!config.contains(section)) {
+			return config.createSection(section);
+		} else {
+			return config.getConfigurationSection(section);
+		}
+	}
 
-    public static Location parseLocation(ConfigurationSection config, String path, World world) {
-        String value = config.getString(path);
-        if (value == null) return null;
+	public static BlockFace parseDirection(ConfigurationSection config, String path) {
+		String value = config.getString(path);
+		if (value == null || value.trim().equals(""))
+			return null;
 
-        String[] parts = value.split(",");
-        if (parts.length < 3) {
-            throw new IllegalArgumentException("A location must be at least (x,y,z)");
-        }
-        Double x = Double.parseDouble(parts[0]);
-        Double y = Double.parseDouble(parts[1]);
-        Double z = Double.parseDouble(parts[2]);
-        if (parts.length == 3) {
-            return new Location(world, x, y, z);
-        }
-        if (parts.length < 5) {
-            throw new IllegalArgumentException("Expected location of type (x,y,z,yaw,pitch)");
-        }
-        Float yaw = Float.parseFloat(parts[3]);
-        Float pit = Float.parseFloat(parts[4]);
-        if (world == null) {
-            if (parts.length != 6) {
-                throw new IllegalArgumentException("Expected location of type (x,y,z,yaw,pitch,world)");
-            }
-            world = Bukkit.getWorld(parts[5]);
-        }
-        return new Location(world, x, y, z, yaw, pit);
-    }
+		for (BlockFace bf : BlockFace.values()) {
+			if (bf.toString().equalsIgnoreCase(value))
+				return bf;
+		}
+		return null;
+	}
 
-    public static void setLocation(ConfigurationSection config, String path, Location location) {
-        if (location == null) {
-            config.set(path, null);
-            return;
-        }
-        String x = twoPlaces(location.getX());
-        String y = twoPlaces(location.getY());
-        String z = twoPlaces(location.getZ());
+	public static void setDirection(ConfigurationSection config, String path, BlockFace direction) {
+		if (direction == null) {
+			config.set(path, null);
+			return;
+		}
 
-        String yaw = twoPlaces(location.getYaw(),   true);
-        String pit = twoPlaces(location.getPitch(), true);
+		config.set(path, direction.name());
+	}
 
-        String world = location.getWorld().getName();
+	public static Location parseLocation(ConfigurationSection config, String path, World world) {
+		String value = config.getString(path);
+		if (value == null)
+			return null;
 
-        String value = x + "," + y + "," + z + "," + yaw + "," + pit + "," + world;
-        config.set(path, value);
-    }
+		String[] parts = value.split(",");
+		if (parts.length < 3) {
+			throw new IllegalArgumentException("A location must be at least (x,y,z)");
+		}
+		Double x = Double.parseDouble(parts[0]);
+		Double y = Double.parseDouble(parts[1]);
+		Double z = Double.parseDouble(parts[2]);
+		if (parts.length == 3) {
+			return new Location(world, x, y, z);
+		}
+		if (parts.length < 5) {
+			throw new IllegalArgumentException("Expected location of type (x,y,z,yaw,pitch)");
+		}
+		Float yaw = Float.parseFloat(parts[3]);
+		Float pit = Float.parseFloat(parts[4]);
+		if (world == null) {
+			if (parts.length != 6) {
+				throw new IllegalArgumentException("Expected location of type (x,y,z,yaw,pitch,world)");
+			}
+			world = Bukkit.getWorld(parts[5]);
+		}
+		return new Location(world, x, y, z, yaw, pit);
+	}
 
-    private static String twoPlaces(double value, boolean force) {
-        return force ? DF_FORCE.format(value) : DF_NORMAL.format(value);
-    }
+	public static void setLocation(ConfigurationSection config, String path, Location location) {
+		if (location == null) {
+			config.set(path, null);
+			return;
+		}
+		String x = twoPlaces(location.getX());
+		String y = twoPlaces(location.getY());
+		String z = twoPlaces(location.getZ());
 
-    private static String twoPlaces(double value) {
-        return twoPlaces(value, false);
-    }
+		String yaw = twoPlaces(location.getYaw(), true);
+		String pit = twoPlaces(location.getPitch(), true);
 
-    private static final DecimalFormat DF_NORMAL = new DecimalFormat("0.##");
-    private static final DecimalFormat DF_FORCE  = new DecimalFormat("0.0#");
-    static {
-        DF_FORCE.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        DF_NORMAL.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-    }
+		String world = location.getWorld().getName();
+
+		String value = x + "," + y + "," + z + "," + yaw + "," + pit + "," + world;
+		config.set(path, value);
+	}
+
+	private static String twoPlaces(double value, boolean force) {
+		return force ? DF_FORCE.format(value) : DF_NORMAL.format(value);
+	}
+
+	private static String twoPlaces(double value) {
+		return twoPlaces(value, false);
+	}
+
+	private static final DecimalFormat DF_NORMAL = new DecimalFormat("0.##");
+	private static final DecimalFormat DF_FORCE = new DecimalFormat("0.0#");
+	static {
+		DF_FORCE.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		DF_NORMAL.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+	}
 }

@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.games.MaterialType;
-import com.cptingle.BoardGames.util.Direction;
+import com.cptingle.BoardGames.region.RegionPoint;
 import com.cptingle.BoardGames.util.GridPoint2D;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -22,32 +23,33 @@ public abstract class Gameboard {
 
 	// Locations stuff
 	protected Location anchorPoint;
-	protected Location directionPoint;
-	protected Direction direction;
+	protected BlockFace directionPoint;
+	protected BlockFace direction;
 
 	// Materials stuff
 	protected Map<MaterialType, Material> gameMaterials;
 
-	public Gameboard(Game game) {
+	public Gameboard(Game game, RegionPoint point) {
 		this.game = game;
 		this.locationPointMap = HashBiMap.create();
 		init();
 		
-		this.anchorPoint = game.getRegion().getB1();
-		this.directionPoint = game.getRegion().getB2();
+		this.anchorPoint = game.getRegion().getPoint(point);
+		this.direction = game.getRegion().getDirection(point);
+		game.getPlugin().getLogger().info("POINT IS: "+ point.toString() + "   ANCHOR POINT: " + anchorPoint + "    Direction: " + direction);
 
 		orient();
 		
 		gameMaterials = new HashMap<>();
 		initMaterials();
 
-		if (anchorPoint != null && directionPoint != null) {
+		if (anchorPoint != null && direction != null) {
 			//reset();
 		} else {
 			game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " COULD NOT BE ENABLED");
 			if (anchorPoint == null)
 				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " ANCHOR POINT NULL");
-			if (directionPoint == null)
+			if (direction == null)
 				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " DIR POINT NULL");
 			game.setEnabled(false);
 		}
@@ -70,7 +72,7 @@ public abstract class Gameboard {
 		return Material.matchMaterial(configMaterial);
 	}
 
-	public Direction getDirection() {
+	public BlockFace getDirection() {
 		return direction;
 	}
 
@@ -82,14 +84,14 @@ public abstract class Gameboard {
 	 * Orient board
 	 */
 	protected void orient() {
-		if (anchorPoint == null || directionPoint == null) {
+		if (anchorPoint == null) {
 			game.setEnabled(false);
 			game.getPlugin().getLogger().warning("Points missing for game " + game.getName());
-			direction = Direction.X;
+			direction = BlockFace.NORTH;
 			return;
 		}
 
-		if (anchorPoint.getBlockX() == directionPoint.getBlockX()) {
+		/*if (anchorPoint.getBlockX() == directionPoint.getBlockX()) {
 			if (anchorPoint.getBlockZ() < directionPoint.getBlockZ()) {
 				direction = Direction.Z;
 			}
@@ -99,7 +101,7 @@ public abstract class Gameboard {
 			}
 		} else {
 			direction = Direction.X;
-		}
+		}*/
 	}
 
 	/**

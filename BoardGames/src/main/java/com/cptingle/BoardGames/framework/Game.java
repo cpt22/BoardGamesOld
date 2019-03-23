@@ -2,8 +2,10 @@ package com.cptingle.BoardGames.framework;
 
 import static com.cptingle.BoardGames.util.config.ConfigUtils.makeSection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,8 +19,10 @@ import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.GameMaster;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.PlayerType;
+import com.cptingle.BoardGames.games.PointCategory;
 import com.cptingle.BoardGames.messaging.Messenger;
 import com.cptingle.BoardGames.region.GameRegion;
+import com.cptingle.BoardGames.region.RegionPoint;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -255,7 +259,6 @@ public abstract class Game {
 	public void doWin(PlayerType pt) {
 		winner = pt;
 		Player winplr = playerMap.get(winner);
-				
 		for (Player player : playerMap.inverse().keySet()) {
 			messenger.tell(player, (winplr.equals(player)) ? "You win!" : "You Lose!");
 		}
@@ -393,6 +396,17 @@ public abstract class Game {
 		}
 		return false;
 	}
+	
+	public RegionPoint[] getPointTypesWithCategory(PointCategory cat) {
+		List<RegionPoint> result = new ArrayList<>();
+		
+		for (RegionPoint p : getAllRegionPoints()) {
+			if (p.getCategory() == cat)
+				result.add(p);
+		}
+		
+		return result.toArray(new RegionPoint[result.size()]);
+	}
 
 	///////////////////////////////////
 	// //
@@ -423,5 +437,19 @@ public abstract class Game {
 	 * Initialize a game
 	 */
 	public abstract void init();
+	
+	/**
+	 *  Load a specific game's point types from string
+	 * @param s
+	 * @return
+	 */
+	public abstract RegionPoint getRegionPointFromString(String s);
+	
+	/**
+	 * Gets all point types
+	 * @return
+	 */
+	public abstract RegionPoint[] getAllRegionPoints();
+
 	
 }

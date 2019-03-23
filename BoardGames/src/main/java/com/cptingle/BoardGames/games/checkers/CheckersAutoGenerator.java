@@ -3,6 +3,7 @@ package com.cptingle.BoardGames.games.checkers;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 
 import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.GameMaster;
@@ -91,10 +92,9 @@ public class CheckersAutoGenerator {
 		region.set("p1", new Location(world, x1, y1, z1));
 		region.set("p2", new Location(world, x2, y2 + 1, z2));
 
-		region.set("b1", new Location(world, bx1, by, bz1));
-		region.set("b2", new Location(world, bx2, by, bz1));
-		region.set("p1Spawn", new Location(world, loc.getX() - 4, y1 + 1, loc.getZ(), -90.0f, 0.0f));
-		region.set("p2Spawn", new Location(world, loc.getX() + 4, y1 + 1, loc.getZ(), 90.0f, 0.0f));
+		region.set("board", new Location(world, bx1, by, bz1), BlockFace.EAST);
+		region.set("p1-spawn", new Location(world, loc.getX() - 4, y1 + 1, loc.getZ(), -90.0f, 0.0f));
+		region.set("p2-spawn", new Location(world, loc.getX() + 4, y1 + 1, loc.getZ(), 90.0f, 0.0f));
 
 		region.save();
 

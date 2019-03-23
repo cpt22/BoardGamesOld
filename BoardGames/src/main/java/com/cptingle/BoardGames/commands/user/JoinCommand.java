@@ -31,7 +31,7 @@ public class JoinCommand implements Command {
 
 		Game toGame = Commands.getGameToJoin(gm, p, arg1);
 		if (toGame == null) {
-			gm.getGlobalMessenger().tell(p, Msg.GAME_DOES_NOT_EXIST);
+			//gm.getGlobalMessenger().tell(p, Msg.GAME_DOES_NOT_EXIST);
 			return true;
 		}
 		// Deny joining from other arenas

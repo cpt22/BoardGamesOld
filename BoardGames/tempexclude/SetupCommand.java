@@ -66,7 +66,7 @@ public class SetupCommand implements Command {
 				gm.getGlobalMessenger().tell(sender,
 						"There is no game with the name " + ChatColor.RED + args[0] + ChatColor.RESET + ".");
 				gm.getGlobalMessenger().tell(sender,
-						"Type " + ChatColor.YELLOW + "/ec addgame " + args[0] + ChatColor.RESET + " to create it!");
+						"Type " + ChatColor.YELLOW + "/bg addgame " + args[0] + ChatColor.RESET + " to create it!");
 				return true;
 			}
 		}

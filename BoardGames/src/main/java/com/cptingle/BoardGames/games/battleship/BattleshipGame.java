@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.GameType;
+import com.cptingle.BoardGames.region.RegionPoint;
 
 public class BattleshipGame extends Game {
 
@@ -50,6 +51,18 @@ public class BattleshipGame extends Game {
 	public void nextTurn() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public RegionPoint getRegionPointFromString(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RegionPoint[] getAllRegionPoints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
