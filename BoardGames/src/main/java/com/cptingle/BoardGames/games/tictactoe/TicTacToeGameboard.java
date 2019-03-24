@@ -2,6 +2,8 @@ package com.cptingle.BoardGames.games.tictactoe;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Game;
@@ -25,7 +27,7 @@ public class TicTacToeGameboard extends Gameboard {
 
 		if (size >= 3 && size <= 15 && size % 2 == 1)
 			BOARD_SIZE = size;
-		
+
 		init();
 		if (anchorPoint != null && direction != null)
 			reset();
@@ -57,8 +59,16 @@ public class TicTacToeGameboard extends Gameboard {
 		for (int x = 0; x < BOARD_SIZE; x++) {
 			for (int z = 0; z < BOARD_SIZE; z++) {
 				GridPoint2D p = new GridPoint2D(x, z);
-				Location l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + x, anchorPoint.getBlockY(),
-						anchorPoint.getBlockZ() + z);
+
+				int mod = direction.getModX() != 0 ? direction.getModX() : direction.getModZ();
+				Location l;
+				if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + -mod * x,
+							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+				} else {
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x,
+							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+				}
 				board[x][z] = PlayerType.NONE;
 				locationPointMap.put(p, l);
 
@@ -99,6 +109,9 @@ public class TicTacToeGameboard extends Gameboard {
 			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(MaterialType.P1_PIECE));
 		else
 			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(MaterialType.P2_PIECE));
+		
+		for (Player plr : game.getAllPlayers())
+			p.playSound(plr.getLocation(), Sound.BLOCK_WOOL_PLACE, 10, 1);
 
 		PlayerType winner = checkForWinner();
 

@@ -20,18 +20,8 @@ public class TicTacToeGame extends Game {
 
 	public TicTacToeGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.TICTACTOE, name, world);
-
+		
 		this.listener = new TicTacToeListener(plugin, this);
-		this.gameboard = new TicTacToeGameboard(this);
-
-		Location spawn = getRegion().getSpawn(TicTacToeRegionPoint.SPAWN);//ConfigUtils.parseLocation(section, "coords.spawn", world);
-
-		if (spawn == null) {
-			setEnabled(false);
-		} else {
-			playerSpawns.put(PlayerType.PLAYER_ONE, spawn);
-			playerSpawns.put(PlayerType.PLAYER_TWO, spawn);
-		}
 	}
 
 	public Gameboard getGameboard() {
@@ -90,9 +80,19 @@ public class TicTacToeGame extends Game {
 	}
 
 	@Override
-	public void init() {
-		// TODO Auto-generated method stub
+	public void initialize() {
+		this.gameboard = new TicTacToeGameboard(this);
 
+		Location spawn = getRegion().getSpawn(TicTacToeRegionPoint.SPAWN);
+		playerSpawns.put(PlayerType.PLAYER_ONE, spawn);
+		playerSpawns.put(PlayerType.PLAYER_TWO, spawn);
+		
+		/*if (spawn == null) {
+			setEnabled(false);
+		} else {
+			playerSpawns.put(PlayerType.PLAYER_ONE, spawn);
+			playerSpawns.put(PlayerType.PLAYER_TWO, spawn);
+		}*/
 	}
 
 	@Override
@@ -111,6 +111,11 @@ public class TicTacToeGame extends Game {
 	@Override 
 	public RegionPoint[] getAllRegionPoints() {
 		return ((RegionPoint[]) TicTacToeRegionPoint.values());
+	}
+	
+	@Override
+	public RegionPoint getRegionPointFromCommonName(String name) {
+		return super.getRegionPointFromCommonName(TicTacToeRegionPoint.values(), name);
 	}
 
 }

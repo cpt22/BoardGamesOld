@@ -24,7 +24,7 @@ public class CheckerPiece {
 	private Location location;
 	private GridPoint2D point;
 
-	public CheckerPiece(Game game, CheckersGameboard gameboard/* , Location location */, PlayerType player,
+	public CheckerPiece(Game game, CheckersGameboard gameboard, PlayerType player,
 			GridPoint2D point) {
 		this.game = game;
 		this.gameboard = gameboard;

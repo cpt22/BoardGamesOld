@@ -19,7 +19,7 @@ public class BattleshipGame extends Game {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void init() {
+	public void initialize() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -64,5 +64,12 @@ public class BattleshipGame extends Game {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public RegionPoint getRegionPointFromCommonName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

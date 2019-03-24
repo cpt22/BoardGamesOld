@@ -30,8 +30,8 @@ public class GameRegion {
 	private Game game;
 	private World world;
 
-	private Location lastP1, lastP2;
-	private Location p1, p2;
+	private Location lastR1, lastR2;
+	private Location r1, r2;
 	private Map<RegionPoint, Location> coordsMap;
 	private Map<RegionPoint, BlockFace> dirsMap;
 	private Map<RegionPoint, Location> spawnsMap;
@@ -84,8 +84,8 @@ public class GameRegion {
 	 * Reloads region from configuration
 	 */
 	public void reloadRegion() {
-		p1 = parseLocation(coords, "p1", world);
-		p2 = parseLocation(coords, "p2", world);
+		r1 = parseLocation(coords, "r1", world);
+		r2 = parseLocation(coords, "r2", world);
 	}
 
 	/**
@@ -145,14 +145,54 @@ public class GameRegion {
 				coordsDirsPresent = false;
 		}
 
+		boolean spawnsPresent = spawnsValid();
+
+		game.getPlugin().getLogger().info("Enabled things: Coords present:" + coordsPresent + "    CoordsDirsPresent:" + coordsDirsPresent + "    SpawnsPresent: " + spawnsPresent);
+		setup = (r1 != null) && (r2 != null) && coordsPresent && coordsDirsPresent && spawnsPresent;
+	}
+	
+	/**
+	 * Validate spawns
+	 * @return
+	 */
+	public boolean spawnsValid() {
 		boolean spawnsPresent = true;
 		RegionPoint[] spawnTypes = game.getPointTypesWithCategory(PointCategory.SPAWN);
 		for (RegionPoint pt : spawnTypes) {
 			if (spawnsMap.get(pt) == null)
 				spawnsPresent = false;
 		}
+		
+		return spawnsPresent;
+	}
 
-		setup = p1 != null && p2 != null && coordsPresent && coordsDirsPresent && spawnsPresent;
+	/**
+	 * Get all points that are yet to be set
+	 * 
+	 * @return
+	 */
+	public List<String> getAllMissing() {
+		List<String> missing = new ArrayList<>();
+		
+		List<RegionPoint> coordTypes = new ArrayList<>();
+		for (RegionPoint rp : game.getPointTypesWithCategory(PointCategory.POINT))
+			coordTypes.add(rp);
+		for (RegionPoint rp : game.getPointTypesWithCategory(PointCategory.POINT_DIR))
+			coordTypes.add(rp);
+		
+		for (RegionPoint pt : coordTypes) {
+			if (coordsMap.get(pt) == null)
+				missing.add(pt.commonName());
+		}
+
+		RegionPoint[] spawnTypes = game.getPointTypesWithCategory(PointCategory.SPAWN);
+		for (RegionPoint pt : spawnTypes) {
+			if (spawnsMap.get(pt) == null)
+				missing.add(pt.commonName());
+		}
+		
+		// Return all missing points
+		return missing;
 	}
 
 	/**
@@ -161,7 +201,7 @@ public class GameRegion {
 	 * @return
 	 */
 	public boolean isDefined() {
-		return (p1 != null && p2 != null);
+		return (r1 != null && r2 != null);
 	}
 
 	/**
@@ -172,7 +212,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Get a spawn for a given PointType
+	 * Get a spawn for a given {@link PointType}
 	 * 
 	 * @param pt
 	 * @return
@@ -182,7 +222,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Gets a point for a given PointType
+	 * Gets a point for a given {@link PointType}
 	 * 
 	 * @param pt
 	 * @return
@@ -217,8 +257,8 @@ public class GameRegion {
 		int z = l.getBlockZ();
 
 		// Returns false if the location is outside of the region.
-		return ((x >= p1.getBlockX() && x <= p2.getBlockX()) && (z >= p1.getBlockZ() && z <= p2.getBlockZ())
-				&& (y >= p1.getBlockY() && y <= p2.getBlockY()));
+		return ((x >= r1.getBlockX() && x <= r2.getBlockX()) && (z >= r1.getBlockZ() && z <= r2.getBlockZ())
+				&& (y >= r1.getBlockY() && y <= r2.getBlockY()));
 	}
 
 	/**
@@ -237,38 +277,38 @@ public class GameRegion {
 		int y = l.getBlockY();
 		int z = l.getBlockZ();
 
-		return ((x + radius >= p1.getBlockX() && x - radius <= p2.getBlockX())
-				&& (z + radius >= p1.getBlockZ() && z - radius <= p2.getBlockZ())
-				&& (y + radius >= p1.getBlockY() && y - radius <= p2.getBlockY()));
+		return ((x + radius >= r1.getBlockX() && x - radius <= r2.getBlockX())
+				&& (z + radius >= r1.getBlockZ() && z - radius <= r2.getBlockZ())
+				&& (y + radius >= r1.getBlockY() && y - radius <= r2.getBlockY()));
 	}
 
 	// Region expand
 	public void expandUp(int amount) {
-		int x = p2.getBlockX();
-		int y = Math.min(p2.getWorld().getMaxHeight(), p2.getBlockY() + amount);
-		int z = p2.getBlockZ();
-		setSaveReload(coords, "p2", p2.getWorld(), x, y, z);
+		int x = r2.getBlockX();
+		int y = Math.min(r2.getWorld().getMaxHeight(), r2.getBlockY() + amount);
+		int z = r2.getBlockZ();
+		setSaveReload(coords, "r2", r2.getWorld(), x, y, z);
 	}
 
 	public void expandDown(int amount) {
-		int x = p1.getBlockX();
-		int y = Math.max(0, p1.getBlockY() - amount);
-		int z = p1.getBlockZ();
-		setSaveReload(coords, "p1", p1.getWorld(), x, y, z);
+		int x = r1.getBlockX();
+		int y = Math.max(0, r1.getBlockY() - amount);
+		int z = r1.getBlockZ();
+		setSaveReload(coords, "r1", r1.getWorld(), x, y, z);
 	}
 
 	public void expandP1(int dx, int dz) {
-		int x = p1.getBlockX() - dx;
-		int y = p1.getBlockY();
-		int z = p1.getBlockZ() - dz;
-		setSaveReload(coords, "p1", p1.getWorld(), x, y, z);
+		int x = r1.getBlockX() - dx;
+		int y = r1.getBlockY();
+		int z = r1.getBlockZ() - dz;
+		setSaveReload(coords, "r1", r1.getWorld(), x, y, z);
 	}
 
 	public void expandP2(int dx, int dz) {
-		int x = p2.getBlockX() + dx;
-		int y = p2.getBlockY();
-		int z = p2.getBlockZ() + dz;
-		setSaveReload(coords, "p2", p2.getWorld(), x, y, z);
+		int x = r2.getBlockX() + dx;
+		int y = r2.getBlockY();
+		int z = r2.getBlockZ() + dz;
+		setSaveReload(coords, "r2", r2.getWorld(), x, y, z);
 	}
 
 	public void expandOut(int amount) {
@@ -284,7 +324,7 @@ public class GameRegion {
 	}
 
 	public void fixRegion() {
-		fix("p1", "p2");
+		fix("r1", "r2");
 	}
 
 	private void fix(String location1, String location2) {
@@ -335,12 +375,12 @@ public class GameRegion {
 	public List<Chunk> getChunks() {
 		List<Chunk> result = new ArrayList<>();
 
-		if (p1 == null || p2 == null) {
+		if (r1 == null || r2 == null) {
 			return result;
 		}
 
-		Chunk c1 = world.getChunkAt(p1);
-		Chunk c2 = world.getChunkAt(p2);
+		Chunk c1 = world.getChunkAt(r1);
+		Chunk c2 = world.getChunkAt(r2);
 
 		for (int i = c1.getX(); i <= c2.getX(); i++) {
 			for (int j = c1.getZ(); j <= c2.getZ(); j++) {
@@ -352,7 +392,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Set the location for a RegionPoint
+	 * Set the location for a {@link RegionPoint}
 	 * 
 	 * @param point
 	 * @param loc
@@ -362,7 +402,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Set the location for a RegionPoint
+	 * Set the location for a {@link RegionPoint}
 	 * 
 	 * @param point
 	 * @param loc
@@ -372,7 +412,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Set the location for a RegionPoint
+	 * Set the location for a {@link RegionPoint}
 	 * 
 	 * @param point
 	 * @param loc
@@ -392,7 +432,7 @@ public class GameRegion {
 	}
 
 	/**
-	 * Set the location for a RegionPoint
+	 * Set the location for a {@link RegionPoint}
 	 * 
 	 * @param point
 	 * @param loc
@@ -419,7 +459,7 @@ public class GameRegion {
 
 	private void setRegionPoint(RegionPointMaster point, Location l) {
 		// Lower and upper locations
-		RegionPointMaster r1, r2;
+		RegionPointMaster rp1, rp2;
 		Location lower, upper;
 
 		/*
@@ -435,23 +475,23 @@ public class GameRegion {
 		 * a more intuitive setup process.
 		 */
 		switch (point) {
-		case P1:
-			lastP1 = l.clone();
-			lower = lastP1.clone();
-			upper = (lastP2 != null ? lastP2.clone() : p2);
-			r1 = RegionPointMaster.P1;
-			r2 = RegionPointMaster.P2;
+		case R1:
+			lastR1 = l.clone();
+			lower = lastR1.clone();
+			upper = (lastR2 != null ? lastR2.clone() : r2);
+			rp1 = RegionPointMaster.R1;
+			rp2 = RegionPointMaster.R2;
 			break;
-		case P2:
-			lastP2 = l.clone();
-			lower = (lastP1 != null ? lastP1.clone() : p1);
-			upper = lastP2.clone();
-			r1 = RegionPointMaster.P1;
-			r2 = RegionPointMaster.P2;
+		case R2:
+			lastR2 = l.clone();
+			lower = (lastR1 != null ? lastR1.clone() : r1);
+			upper = lastR2.clone();
+			rp1 = RegionPointMaster.R1;
+			rp2 = RegionPointMaster.R2;
 			break;
 		default:
 			lower = upper = null;
-			r1 = r2 = null;
+			rp1 = rp2 = null;
 		}
 
 		// Min-max if both locations are non-null
@@ -476,9 +516,9 @@ public class GameRegion {
 
 		// Set the coords and save
 		if (lower != null)
-			setLocation(coords, r1.name().toLowerCase(), lower);
+			setLocation(coords, rp1.configName(), lower);
 		if (upper != null)
-			setLocation(coords, r2.name().toLowerCase(), upper);
+			setLocation(coords, rp2.configName(), upper);
 		save();
 
 		// Reload regions and verify data
@@ -524,7 +564,7 @@ public class GameRegion {
 		if (!isDefined()) {
 			return;
 		}
-		showBlocks(p, getFramePoints(p1, p2));
+		showBlocks(p, getFramePoints(r1, r2));
 	}
 
 	public void showSpawns(Player p) {
@@ -534,7 +574,7 @@ public class GameRegion {
 		for (RegionPoint rp : spawnsMap.keySet()) {
 			Location l = spawnsMap.get(rp);
 			if (l != null)
-				showBlock(p, l, Material.BLUE_WOOL);
+				showBlock(p, l, rp.getShowMaterial());
 		}
 	}
 

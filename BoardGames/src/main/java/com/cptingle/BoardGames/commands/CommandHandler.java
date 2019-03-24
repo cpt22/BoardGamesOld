@@ -23,6 +23,7 @@ import com.cptingle.BoardGames.commands.setup.AutoGenerateCommand;
 import com.cptingle.BoardGames.commands.setup.EditGameCommand;
 import com.cptingle.BoardGames.commands.setup.RemoveGameCommand;
 import com.cptingle.BoardGames.commands.setup.SettingCommand;
+import com.cptingle.BoardGames.commands.setup.SetupCommand;
 import com.cptingle.BoardGames.commands.user.GameListCommand;
 import com.cptingle.BoardGames.commands.user.JoinCommand;
 import com.cptingle.BoardGames.commands.user.LeaveCommand;
@@ -209,6 +210,7 @@ public class CommandHandler implements CommandExecutor {
 		// Setup Commands
 		//register(SetupCommand.class);
 		register(SettingCommand.class);
+		register(SetupCommand.class);
 
 		register(AddGameCommand.class);
 		register(RemoveGameCommand.class);

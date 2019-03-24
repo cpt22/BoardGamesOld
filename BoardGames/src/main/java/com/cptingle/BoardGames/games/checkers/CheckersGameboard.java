@@ -62,10 +62,18 @@ public class CheckersGameboard extends Gameboard {
 		for (int x = 0; x < 8; x++) {
 			for (int z = 0; z < 8; z++) {
 				GridPoint2D p = new GridPoint2D(x, z);
-				Location l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + x, anchorPoint.getBlockY(),
-						anchorPoint.getBlockZ() + z);
+				
+				int mod = direction.getModX() != 0 ? direction.getModX() : direction.getModZ();
+				Location l;
+				if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + -mod * x,
+							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+				} else {
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x,
+							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+				}
+				
 				board[x][z] = new CheckerSquare(game, l, p);
-
 				locationPointMap.put(p, l);
 
 				Location l1 = l.clone().add(0, 1, 0);
@@ -75,12 +83,12 @@ public class CheckersGameboard extends Gameboard {
 
 				int t1;
 				int t2;
-				if (direction != BlockFace.EAST && direction != BlockFace.WEST) {
-					t1 = z;
-					t2 = x;
-				} else {
+				if (direction == BlockFace.EAST || direction == BlockFace.WEST) {
 					t1 = x;
 					t2 = z;
+				} else {
+					t1 = z;
+					t2 = x;
 				}
 				if (((t1 % 2 == 0) && (t2 % 2 == 1)) || ((t1 % 2 == 1) && (t2 % 2 == 0))) {
 					board[x][z].setBlock(getMaterial(MaterialType.BLACK_SQUARE));

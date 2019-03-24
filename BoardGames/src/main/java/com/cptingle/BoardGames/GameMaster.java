@@ -35,7 +35,7 @@ public class GameMaster {
 	// Game storage
 	private List<Game> games;
 	private Map<Player, Game> gameMap;
-	//private Game selectedGame;
+	// private Game selectedGame;
 
 	private Map<Game, Set<String>> allowedCommands;
 
@@ -59,7 +59,6 @@ public class GameMaster {
 
 		// Determine if plugin is set to be enabled
 		this.enabled = config.getBoolean("global-settings.enabled", true);
-		this.getPlugin();
 	}
 
 	/**
@@ -391,8 +390,9 @@ public class GameMaster {
 		registerPermission(
 				"easycheckers.games." + game.getType().configName().toLowerCase() + "." + gamename.toLowerCase(),
 				PermissionDefault.TRUE);
+		
 		games.add(game);
-		game.init();
+		//game.init();
 		return game;
 	}
 
@@ -409,6 +409,19 @@ public class GameMaster {
 
 		loadGame(name);
 		return true;
+	}
+
+	public void reload() {
+		for (Game g : games) {
+			g.forceEnd();
+		}
+		
+		games.clear();
+	
+		plugin.reloadConfig();
+		config = plugin.getConfig();
+
+		initialize();
 	}
 
 	// New games
@@ -478,10 +491,10 @@ public class GameMaster {
 
 	// Weird Special Stuff
 	private Game createGame(String type, BoardGames plugin, ConfigurationSection section, String name, World world) {
-		//plugin.reloadConfig();
+		// plugin.reloadConfig();
 		Game game = null;
 		GameType t = GameType.fromString(type);
-		
+
 		switch (t) {
 		case CHECKERS:
 			game = new CheckersGame(plugin, section, name, world);

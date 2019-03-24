@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
@@ -285,6 +286,16 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onPotionSplash(PotionSplashEvent event) {
+		// TODO: IMPLEMENT
+		return;
+	}
+
+	/**
+	 * Handle projectile hit event
+	 * 
+	 * @param event
+	 */
+	public void onProjectileHit(ProjectileHitEvent event) {
 		// TODO: IMPLEMENT
 		return;
 	}

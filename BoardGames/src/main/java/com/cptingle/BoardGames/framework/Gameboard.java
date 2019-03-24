@@ -36,21 +36,13 @@ public abstract class Gameboard {
 		
 		this.anchorPoint = game.getRegion().getPoint(point);
 		this.direction = game.getRegion().getDirection(point);
-		game.getPlugin().getLogger().info("POINT IS: "+ point.toString() + "   ANCHOR POINT: " + anchorPoint + "    Direction: " + direction);
 
 		orient();
 		
 		gameMaterials = new HashMap<>();
 		initMaterials();
 
-		if (anchorPoint != null && direction != null) {
-			//reset();
-		} else {
-			game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " COULD NOT BE ENABLED");
-			if (anchorPoint == null)
-				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " ANCHOR POINT NULL");
-			if (direction == null)
-				game.getPlugin().getLogger().severe("ERROR, GAME " + game.getName() + " DIR POINT NULL");
+		if (!game.getRegion().isSetup()) {
 			game.setEnabled(false);
 		}
 

@@ -25,7 +25,7 @@ public class EnableCommand implements Command {
         
         if (arg1.equals("all")) {
             for (Game game : gm.getGames()) {
-                enable(game, sender);
+                enable(gm, game, sender);
             }
             return true;
         }
@@ -36,7 +36,7 @@ public class EnableCommand implements Command {
                 gm.getGlobalMessenger().tell(sender, Msg.GAME_DOES_NOT_EXIST);
                 return true;
             }
-            enable(game, sender);
+            enable(gm, game, sender);
             return true;
         }
         
@@ -46,9 +46,10 @@ public class EnableCommand implements Command {
         return true;
     }
     
-    private void enable(Game game, CommandSender sender) {
+    private void enable(GameMaster gm, Game game, CommandSender sender) {
         game.setEnabled(true);
         game.getPlugin().saveConfig();
+        gm.reloadGame(game.getName());
         game.getPlugin().getLogger().severe("" + game.getGlobalMessenger());
         game.getGlobalMessenger().tell(sender, "Game '" + game.configName() + "' " + ChatColor.GREEN + "enabled");
     }

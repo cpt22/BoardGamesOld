@@ -1,6 +1,5 @@
 package com.cptingle.BoardGames.games.checkers;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -19,20 +18,8 @@ public class CheckersGame extends Game {
 
 	public CheckersGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.CHECKERS, name, world);
-		this.listener = new CheckersListener(plugin, this);
-
-		gameboard = new CheckersGameboard(this);
-
-		Location p1Spawn = getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN);
-		Location p2Spawn = getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN);
-
-		if (p1Spawn == null || p2Spawn == null) {
-			setEnabled(false);
-		} else {
-			playerSpawns.put(PlayerType.PLAYER_ONE, p1Spawn);
-			playerSpawns.put(PlayerType.PLAYER_TWO, p2Spawn);
-		}
 		
+		this.listener = new CheckersListener(plugin, this);
 	}
 
 	@Override
@@ -59,9 +46,19 @@ public class CheckersGame extends Game {
 	}
 
 	@Override
-	public void init() {
-		// TODO Auto-generated method stub
+	public void initialize() {
+		gameboard = new CheckersGameboard(this);
 
+		playerSpawns.put(PlayerType.PLAYER_ONE, getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN));
+		playerSpawns.put(PlayerType.PLAYER_TWO, getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN));
+		/*Location p1Spawn = getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN);
+		Location p2Spawn = getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN);
+
+		if (p1Spawn == null || p2Spawn == null) {
+			setEnabled(false);
+		} else {
+			
+		}*/
 	}
 	
 	@Override
@@ -72,6 +69,11 @@ public class CheckersGame extends Game {
 	@Override 
 	public RegionPoint[] getAllRegionPoints() {
 		return ((RegionPoint[]) CheckersRegionPoint.values());
+	}
+	
+	@Override
+	public RegionPoint getRegionPointFromCommonName(String name) {
+		return super.getRegionPointFromCommonName(CheckersRegionPoint.values(), name);
 	}
 
 	@Override

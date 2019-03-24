@@ -47,13 +47,12 @@ public abstract class Game {
 	protected BiMap<PlayerType, Player> playerMap;
 	protected Map<Player, GamePlayer> savedPlayers;
 	protected Map<PlayerType, Location> playerSpawns;
-	
+
 	protected PlayerType whoseTurn;
 	protected PlayerType winner;
 
 	// Critical settings
 	protected boolean enabled, protect, running, edit;
-
 
 	// Other Settings
 	protected boolean isolatedChat;
@@ -95,17 +94,23 @@ public abstract class Game {
 		this.savedPlayers = new HashMap<>();
 		this.playerSpawns = new HashMap<>();
 		this.whoseTurn = PlayerType.NONE;
-		
+
 		String configPrefix = settings.getString("prefix", type.defaultPrefix());
 
 		createMessenger(configPrefix.equals("") ? type.defaultPrefix() : configPrefix);
 
 		loadSettings();
+		
+		if (!region.isSetup())
+			setEnabled(false);
+		
+		if (enabled)
+			initialize();
 	}
 
 	protected void loadSettings() {
 		this.enabled = settings.getBoolean("enabled", false);
-		this.isolatedChat = settings.getBoolean("isolatedChat", false);		
+		this.isolatedChat = settings.getBoolean("isolatedChat", false);
 	}
 
 	protected void createMessenger(String prefix) {
@@ -120,7 +125,7 @@ public abstract class Game {
 	public ConfigurationSection getSettings() {
 		return settings;
 	}
-	
+
 	public ConfigurationSection getSpecificSettings() {
 		return specificSettings;
 	}
@@ -169,11 +174,11 @@ public abstract class Game {
 	public BiMap<PlayerType, Player> getPlayerMap() {
 		return playerMap;
 	}
-	
+
 	public PlayerType getTypeFromPlayer(Player p) {
 		return playerMap.inverse().get(p);
 	}
-	
+
 	public Player getPlayerFromType(PlayerType pt) {
 		return playerMap.get(pt);
 	}
@@ -239,7 +244,7 @@ public abstract class Game {
 	public void setEventListener(GameListener gl) {
 		listener = gl;
 	}
-	
+
 	public Location getSpawnForPlayer(PlayerType p) {
 		return playerSpawns.get(p);
 	}
@@ -247,22 +252,22 @@ public abstract class Game {
 	public PlayerType whoseTurn() {
 		return whoseTurn;
 	}
-	
+
 	public PlayerType turn() {
 		return whoseTurn;
 	}
-	
+
 	public void setTurn(PlayerType pt) {
 		whoseTurn = pt;
 	}
-	
+
 	public void doWin(PlayerType pt) {
 		winner = pt;
 		Player winplr = playerMap.get(winner);
 		for (Player player : playerMap.inverse().keySet()) {
 			messenger.tell(player, (winplr.equals(player)) ? "You win!" : "You Lose!");
 		}
-		
+
 		this.end();
 	}
 
@@ -271,6 +276,7 @@ public abstract class Game {
 	 */
 	/**
 	 * Checks if player is in this game
+	 * 
 	 * @param p
 	 * @return
 	 */
@@ -280,6 +286,7 @@ public abstract class Game {
 
 	/**
 	 * Join a player to this game
+	 * 
 	 * @param p
 	 * @return
 	 */
@@ -293,6 +300,7 @@ public abstract class Game {
 
 	/**
 	 * Make a player leave this game
+	 * 
 	 * @param p
 	 * @return
 	 */
@@ -309,6 +317,7 @@ public abstract class Game {
 
 	/**
 	 * Send a message to all players currently in this game
+	 * 
 	 * @param message
 	 */
 	public void tellAllPlayers(String message) {
@@ -319,6 +328,7 @@ public abstract class Game {
 
 	/**
 	 * Stores a players data for restoration after leaving game
+	 * 
 	 * @param p
 	 */
 	public void storePlayer(Player p) {
@@ -330,6 +340,7 @@ public abstract class Game {
 
 	/**
 	 * Restore a players data after leaving the game
+	 * 
 	 * @param p
 	 */
 	public void restorePlayer(Player p) {
@@ -339,32 +350,33 @@ public abstract class Game {
 			p.teleport(plr.getReturnLocation());
 		}
 	}
-	
+
 	/**
 	 * End the game
 	 */
 	public void end() {
 		end(null);
 	}
-	
+
 	/**
 	 * End the game with specified message sent to all players
+	 * 
 	 * @param message
 	 */
 	public void end(String message) {
 		if (message != null)
 			tellAllPlayers(message);
-		
+
 		running = false;
 		setTurn(PlayerType.NONE);
-		
+
 		Player[] plyrs = players.toArray(new Player[players.size()]);
 		for (Player p : plyrs) {
 			playerLeave(p);
 		}
 		resetGame();
 	}
-	
+
 	/**
 	 * Force end the game
 	 */
@@ -396,16 +408,24 @@ public abstract class Game {
 		}
 		return false;
 	}
-	
+
 	public RegionPoint[] getPointTypesWithCategory(PointCategory cat) {
 		List<RegionPoint> result = new ArrayList<>();
-		
+
 		for (RegionPoint p : getAllRegionPoints()) {
 			if (p.getCategory() == cat)
 				result.add(p);
 		}
-		
+
 		return result.toArray(new RegionPoint[result.size()]);
+	}
+
+	protected RegionPoint getRegionPointFromCommonName(RegionPoint[] values, String name) {
+		for (RegionPoint value : values) {
+			if (value.commonName().equalsIgnoreCase(name))
+				return value;
+		}
+		return null;
 	}
 
 	///////////////////////////////////
@@ -417,6 +437,7 @@ public abstract class Game {
 	// Game methods
 	/**
 	 * Check if a player is permitted to join the game
+	 * 
 	 * @param p
 	 * @return true if player permitted to join
 	 */
@@ -426,7 +447,7 @@ public abstract class Game {
 	 * Begin the game
 	 */
 	protected abstract void begin();
-	
+
 	/**
 	 * Advance game to next turn
 	 */
@@ -436,20 +457,30 @@ public abstract class Game {
 	/**
 	 * Initialize a game
 	 */
-	public abstract void init();
-	
+	public abstract void initialize();
+
 	/**
-	 *  Load a specific game's point types from string
+	 * Load a specific game's point types from string
+	 * 
 	 * @param s
 	 * @return
 	 */
 	public abstract RegionPoint getRegionPointFromString(String s);
-	
+
 	/**
 	 * Gets all point types
+	 * 
 	 * @return
 	 */
 	public abstract RegionPoint[] getAllRegionPoints();
 
-	
+	/**
+	 * Get a region point from its common name. Used mainly in the
+	 * {@link SetupCommand} class.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public abstract RegionPoint getRegionPointFromCommonName(String name);
+
 }

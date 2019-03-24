@@ -3,7 +3,11 @@ package com.cptingle.BoardGames.listeners;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,6 +29,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
@@ -108,26 +113,22 @@ public class BGGlobalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void signChange(SignChangeEvent event) {
-		/*if (!event.getPlayer().hasPermission("mobgame.setup.leaderboards")) {
-			return;
-		}
-
-		if (!event.getLine(0).startsWith("[MA]")) {
-			return;
-		}
-
-		String text = event.getLine(0).substring((4));
-		Game game;
-		Stats stat;
-
-		if ((game = gm.getGameWithName(text)) != null) {
-			game.getEventListener().onSignChange(event);
-			setSignLines(event, ChatColor.GREEN + "MobGame", ChatColor.YELLOW + game.gameName(),
-					ChatColor.AQUA + "Players", "---------------");
-		} else if ((stat = Stats.getByShortName(text)) != null) {
-			setSignLines(event, ChatColor.GREEN + "", "", ChatColor.AQUA + stat.getFullName(), "---------------");
-			gm.getGlobalMessenger().tell(event.getPlayer(), "Stat sign created.");
-		}*/
+		/*
+		 * if (!event.getPlayer().hasPermission("mobgame.setup.leaderboards")) { return;
+		 * }
+		 * 
+		 * if (!event.getLine(0).startsWith("[MA]")) { return; }
+		 * 
+		 * String text = event.getLine(0).substring((4)); Game game; Stats stat;
+		 * 
+		 * if ((game = gm.getGameWithName(text)) != null) {
+		 * game.getEventListener().onSignChange(event); setSignLines(event,
+		 * ChatColor.GREEN + "MobGame", ChatColor.YELLOW + game.gameName(),
+		 * ChatColor.AQUA + "Players", "---------------"); } else if ((stat =
+		 * Stats.getByShortName(text)) != null) { setSignLines(event, ChatColor.GREEN +
+		 * "", "", ChatColor.AQUA + stat.getFullName(), "---------------");
+		 * gm.getGlobalMessenger().tell(event.getPlayer(), "Stat sign created."); }
+		 */
 	}
 
 	private void setSignLines(SignChangeEvent event, String s1, String s2, String s3, String s4) {
@@ -227,6 +228,26 @@ public class BGGlobalListener implements Listener {
 			game.getEventListener().onPotionSplash(event);
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void projectileHit(final ProjectileHitEvent event) {
+		for (Game game : gm.getGames()) {
+			game.getEventListener().onProjectileHit(event);
+		}
+		if (event.getEntity().getType() == EntityType.ARROW && event.getEntity().getShooter() instanceof Player && event.getHitBlock() != null) {
+			//event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(), 30F);//(event.getEntity().getLocation(), EntityType.PRIMED_TNT);
+			for (int i = 0; i < 15; i++) {
+				event.getEntity().getLocation().getWorld().spawnEntity(event.getEntity().getLocation().add(i,0,i), EntityType.LLAMA);//(event.getEntity().getLocation(), EntityType.PRIMED_TNT);
+			}
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				@Override
+				public void run() {
+					event.getEntity().remove();
+				}
+			}, 100L);
+
+		}
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	// //
@@ -289,11 +310,11 @@ public class BGGlobalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerJoin(PlayerJoinEvent event) {
-		//InventoryManager.restoreFromFile(plugin, event.getPlayer());
-		//if (!gm.notifyOnUpdates() || !event.getPlayer().isOp())
-		//	return;
+		// InventoryManager.restoreFromFile(plugin, event.getPlayer());
+		// if (!gm.notifyOnUpdates() || !event.getPlayer().isOp())
+		// return;
 
-		//VersionChecker.checkForUpdates(plugin, event.getPlayer());
+		// VersionChecker.checkForUpdates(plugin, event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -316,7 +337,7 @@ public class BGGlobalListener implements Listener {
 			}
 		}
 
-		//plugin.restoreInventory(event.getPlayer());
+		// plugin.restoreInventory(event.getPlayer());
 	}
 
 	public enum TeleportResponse {
@@ -325,30 +346,19 @@ public class BGGlobalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerTeleport(PlayerTeleportEvent event) {
-		/*if (!gm.isEnabled())
-			return;
-
-		boolean allow = true;
-		for (Game game : gm.getGames()) {
-			TeleportResponse r = game.getEventListener().onPlayerTeleport(event);
-
-			// If just one game allows, uncancel and stop.
-			switch (r) {
-			case ALLOW:
-				event.setCancelled(false);
-				return;
-			case REJECT:
-				allow = false;
-				break;
-			default:
-				break;
-			}
-		}
-
-		// Only cancel if at least one game has rejected the teleport.
-		if (!allow) {
-			event.setCancelled(true);
-		}*/
+		/*
+		 * if (!gm.isEnabled()) return;
+		 * 
+		 * boolean allow = true; for (Game game : gm.getGames()) { TeleportResponse r =
+		 * game.getEventListener().onPlayerTeleport(event);
+		 * 
+		 * // If just one game allows, uncancel and stop. switch (r) { case ALLOW:
+		 * event.setCancelled(false); return; case REJECT: allow = false; break;
+		 * default: break; } }
+		 * 
+		 * // Only cancel if at least one game has rejected the teleport. if (!allow) {
+		 * event.setCancelled(true); }
+		 */
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

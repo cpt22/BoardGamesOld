@@ -72,8 +72,8 @@ public class TicTacToeAutoGenerator {
 
 		// Set up the Region points.
 		GameRegion region = game.getRegion();
-		region.set("p1", new Location(world, x1, y1, z1));
-		region.set("p2", new Location(world, x2, y2 + 1, z2));
+		region.set("r1", new Location(world, x1, y1, z1));
+		region.set("r2", new Location(world, x2, y2 + 1, z2));
 
 		region.set("board", new Location(world, bx1, by, bz1), BlockFace.EAST);
 		region.set("spawn", new Location(world, loc.getX() - 4, y1 + 1, loc.getZ(), -90.0f, 0.0f));
