@@ -307,9 +307,11 @@ public class BGGlobalListener implements Listener {
 		for (Game game : gm.getGames())
 			game.getEventListener().onPlayerInteract(event);
 	}
+	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerJoin(PlayerJoinEvent event) {
+
 		// InventoryManager.restoreFromFile(plugin, event.getPlayer());
 		// if (!gm.notifyOnUpdates() || !event.getPlayer().isOp())
 		// return;

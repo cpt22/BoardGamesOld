@@ -3,7 +3,8 @@ package com.cptingle.BoardGames.games;
 public enum PointCategory {
 	SPAWN("spawns"),
 	POINT("locations"),
-	POINT_DIR("directions");
+	POINT_DIR("directions"),
+	POINT_CUBOID("locations");
 	
 	private String path;
 	

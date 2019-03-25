@@ -10,6 +10,7 @@ import com.cptingle.BoardGames.commands.Commands;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.checkers.CheckersAutoGenerator;
+import com.cptingle.BoardGames.games.minesweeper.MinesweeperAutoGenerator;
 import com.cptingle.BoardGames.games.tictactoe.TicTacToeAutoGenerator;
 import com.cptingle.BoardGames.messaging.Msg;
 
@@ -56,6 +57,8 @@ public class AutoGenerateCommand implements Command {
 		case TICTACTOE:
 			successful = TicTacToeAutoGenerator.autogenerate(p.getLocation(), 8, args[0], gm.getPlugin());
 			break;
+		case MINESWEEPER:
+			successful = MinesweeperAutoGenerator.autogenerate(p.getLocation(), 12, args[0], gm.getPlugin());
 		}
 		
 		if (!successful) {

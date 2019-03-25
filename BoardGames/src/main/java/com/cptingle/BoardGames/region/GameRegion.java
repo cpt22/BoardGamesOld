@@ -145,14 +145,22 @@ public class GameRegion {
 				coordsDirsPresent = false;
 		}
 
+		boolean coordsCuboidPresent = true;
+		RegionPoint[] coordCuboidTypes = game.getPointTypesWithCategory(PointCategory.POINT_CUBOID);
+		for (RegionPoint pt : coordCuboidTypes) {
+			if (coordsMap.get(pt) == null)
+				coordsCuboidPresent = false;
+		}
+
 		boolean spawnsPresent = spawnsValid();
 
-		game.getPlugin().getLogger().info("Enabled things: Coords present:" + coordsPresent + "    CoordsDirsPresent:" + coordsDirsPresent + "    SpawnsPresent: " + spawnsPresent);
-		setup = (r1 != null) && (r2 != null) && coordsPresent && coordsDirsPresent && spawnsPresent;
+		setup = (r1 != null) && (r2 != null) && coordsPresent && coordsDirsPresent && coordsCuboidPresent
+				&& spawnsPresent;
 	}
-	
+
 	/**
 	 * Validate spawns
+	 * 
 	 * @return
 	 */
 	public boolean spawnsValid() {
@@ -162,7 +170,7 @@ public class GameRegion {
 			if (spawnsMap.get(pt) == null)
 				spawnsPresent = false;
 		}
-		
+
 		return spawnsPresent;
 	}
 
@@ -173,13 +181,15 @@ public class GameRegion {
 	 */
 	public List<String> getAllMissing() {
 		List<String> missing = new ArrayList<>();
-		
+
 		List<RegionPoint> coordTypes = new ArrayList<>();
 		for (RegionPoint rp : game.getPointTypesWithCategory(PointCategory.POINT))
 			coordTypes.add(rp);
 		for (RegionPoint rp : game.getPointTypesWithCategory(PointCategory.POINT_DIR))
 			coordTypes.add(rp);
-		
+		for (RegionPoint rp : game.getPointTypesWithCategory(PointCategory.POINT_CUBOID))
+			coordTypes.add(rp);
+
 		for (RegionPoint pt : coordTypes) {
 			if (coordsMap.get(pt) == null)
 				missing.add(pt.commonName());
@@ -190,7 +200,7 @@ public class GameRegion {
 			if (spawnsMap.get(pt) == null)
 				missing.add(pt.commonName());
 		}
-		
+
 		// Return all missing points
 		return missing;
 	}
@@ -421,6 +431,8 @@ public class GameRegion {
 	public void set(String point, Location loc, BlockFace dir) {
 		// Get point
 		RegionPoint rp = game.getRegionPointFromString(point);
+		if (rp == null)
+			rp = game.getRegionPointFromCommonName(point);
 		RegionPointMaster rpm = (RegionPointMaster) RegionPointMaster.matchString(point);
 		if (rp == null && rpm == null)
 			throw new IllegalArgumentException("Invalid region point '" + point + "'");
@@ -448,6 +460,9 @@ public class GameRegion {
 				setPoint(point, loc);
 			if (dir != null)
 				setDir(point, dir);
+			return;
+		case POINT_CUBOID:
+			setPoint(point, loc);
 			return;
 		case SPAWN:
 			setSpawn(point, loc);
@@ -524,6 +539,61 @@ public class GameRegion {
 		// Reload regions and verify data
 		reloadRegion();
 		verifyData();
+	}
+
+	public void fixIfNeedFixing(RegionPoint rp1, RegionPoint rp2) {
+		Location p1 = getPoint(rp1);
+		Location p2 = getPoint(rp2);
+
+		if (rp1 == null || rp2 == null)
+			return;
+
+		if (p1.getX() > p2.getX())
+			fixCuboid(rp1, rp2);
+		if (p1.getY() > p2.getY())
+			fixCuboid(rp1, rp2);
+		if (p1.getZ() > p2.getZ())
+			fixCuboid(rp1, rp2);
+	}
+
+	public void fixCuboid(RegionPoint rp1, RegionPoint rp2) {
+		Location l1 = this.getPoint(rp1);
+		Location l2 = this.getPoint(rp2);
+		// Min-max if both locations are non-null
+		if (l1 != null && l2 != null) {
+			Location lower = l1.clone();
+			Location upper = l2.clone();
+
+			double tmp;
+			if (lower.getX() > upper.getX()) {
+				tmp = lower.getX();
+				lower.setX(upper.getX());
+				upper.setX(tmp);
+			}
+			if (lower.getY() > upper.getY()) {
+				tmp = lower.getY();
+				lower.setY(upper.getY());
+				upper.setY(tmp);
+			}
+			if (lower.getZ() > upper.getZ()) {
+				tmp = lower.getZ();
+				lower.setZ(upper.getZ());
+				upper.setZ(tmp);
+			}
+
+			// Set the coords and save
+			if (lower != null)
+				coordsMap.put(rp1, lower);
+			setLocation(locations, rp1.configName(), lower);
+			if (upper != null)
+				coordsMap.put(rp2, upper);
+			setLocation(locations, rp2.configName(), upper);
+			save();
+
+			// Reload regions and verify data
+			reloadRegion();
+			verifyData();
+		}
 	}
 
 	private void setPoint(RegionPoint point, Location loc) {

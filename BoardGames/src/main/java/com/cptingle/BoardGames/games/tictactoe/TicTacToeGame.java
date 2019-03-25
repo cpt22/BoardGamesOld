@@ -30,10 +30,7 @@ public class TicTacToeGame extends Game {
 
 	@Override
 	public boolean canJoin(Player p) {
-		if (players.size() < 2)
-			return true;
-
-		return false;
+		return players.size() < 2;
 	}
 
 	@Override

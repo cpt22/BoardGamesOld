@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.Conversation;
@@ -429,6 +428,8 @@ public class SetupCommand implements Command {
 					break;
 				}*/
 				game.getRegion().set(point, p.getLocation(), p.getFacing());
+			} else if (point.getCategory() == PointCategory.POINT_CUBOID) {
+				
 			} else {
 				game.getRegion().set(point, p.getLocation());
 			}

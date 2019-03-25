@@ -100,10 +100,10 @@ public abstract class Game {
 		createMessenger(configPrefix.equals("") ? type.defaultPrefix() : configPrefix);
 
 		loadSettings();
-		
+
 		if (!region.isSetup())
 			setEnabled(false);
-		
+
 		if (enabled)
 			initialize();
 	}

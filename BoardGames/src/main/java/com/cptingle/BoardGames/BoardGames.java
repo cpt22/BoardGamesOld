@@ -42,7 +42,6 @@ public class BoardGames extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-
 	}
 
 	@Override
