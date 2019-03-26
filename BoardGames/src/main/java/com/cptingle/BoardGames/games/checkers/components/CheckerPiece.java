@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.CheckersGameboard;
 import com.cptingle.BoardGames.util.GridPoint2D;
@@ -33,8 +32,8 @@ public class CheckerPiece {
 		this.point = point;
 
 		this.typeMap = new HashMap<>();
-		typeMap.put(PlayerType.PLAYER_ONE, gameboard.getMaterial(MaterialType.P1_PIECE));
-		typeMap.put(PlayerType.PLAYER_TWO, gameboard.getMaterial(MaterialType.P2_PIECE));
+		typeMap.put(PlayerType.PLAYER_ONE, gameboard.getMaterial(CheckersMaterial.P1_PIECE));
+		typeMap.put(PlayerType.PLAYER_TWO, gameboard.getMaterial(CheckersMaterial.P2_PIECE));
 		this.king = false;
 
 		set();
@@ -88,7 +87,7 @@ public class CheckerPiece {
 	public void set() {
 		this.location.getBlock().setType(typeMap.get(player));
 		if (king) {
-			getTopBlock().setType(gameboard.getMaterial(MaterialType.KING));
+			getTopBlock().setType(gameboard.getMaterial(CheckersMaterial.KING));
 		} else {
 			getTopBlock().setType(Material.AIR);
 		}
@@ -114,7 +113,7 @@ public class CheckerPiece {
 	}
 
 	public void select() {
-		this.location.getBlock().setType(gameboard.getMaterial(MaterialType.SELECTED));
+		this.location.getBlock().setType(gameboard.getMaterial(CheckersMaterial.SELECTED));
 	}
 
 	public void unselect() {

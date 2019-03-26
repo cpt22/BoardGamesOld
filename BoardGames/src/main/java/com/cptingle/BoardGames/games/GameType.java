@@ -4,7 +4,8 @@ public enum GameType {
 	CHECKERS("checkers", "&c[Checkers]"), 
 	BATTLESHIP("battleship", "&b[Battleship]"),
 	TICTACTOE("tictactoe", "&2[&9TicTacToe&2]"),
-	MINESWEEPER("minesweeper", "&r[Minesweeper]");
+	MINESWEEPER("minesweeper", "&r[Minesweeper]"),
+	SUDOKU("sudoku", "&9[Sudoku]");
 
 	private String text;
 	private String prefix;

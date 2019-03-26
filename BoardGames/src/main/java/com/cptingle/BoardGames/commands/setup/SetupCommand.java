@@ -35,9 +35,9 @@ import com.cptingle.BoardGames.commands.Command;
 import com.cptingle.BoardGames.commands.CommandInfo;
 import com.cptingle.BoardGames.commands.Commands;
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.PointCategory;
 import com.cptingle.BoardGames.messaging.Msg;
 import com.cptingle.BoardGames.region.GameRegion;
+import com.cptingle.BoardGames.region.PointCategory;
 import com.cptingle.BoardGames.region.RegionPoint;
 
 @CommandInfo(name = "setup", pattern = "setup", usage = "/bg setup <game>", desc = "enter setup mode for a game", permission = "boardgames.setup.setup")

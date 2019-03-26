@@ -2,7 +2,7 @@ package com.cptingle.BoardGames.games.tictactoe.components;
 
 import org.bukkit.Material;
 
-import com.cptingle.BoardGames.games.PointCategory;
+import com.cptingle.BoardGames.region.PointCategory;
 import com.cptingle.BoardGames.region.RegionPoint;
 
 public enum TicTacToeRegionPoint implements RegionPoint {

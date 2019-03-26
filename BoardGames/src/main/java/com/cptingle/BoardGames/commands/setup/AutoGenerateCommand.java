@@ -11,6 +11,7 @@ import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.checkers.CheckersAutoGenerator;
 import com.cptingle.BoardGames.games.minesweeper.MinesweeperAutoGenerator;
+import com.cptingle.BoardGames.games.sudoku.SudokuAutoGenerator;
 import com.cptingle.BoardGames.games.tictactoe.TicTacToeAutoGenerator;
 import com.cptingle.BoardGames.messaging.Msg;
 
@@ -59,6 +60,10 @@ public class AutoGenerateCommand implements Command {
 			break;
 		case MINESWEEPER:
 			successful = MinesweeperAutoGenerator.autogenerate(p.getLocation(), 12, args[0], gm.getPlugin());
+			break;
+		case SUDOKU:
+			successful = SudokuAutoGenerator.autogenerate(p.getLocation(), 9, args[0], gm.getPlugin());
+			break;
 		}
 		
 		if (!successful) {

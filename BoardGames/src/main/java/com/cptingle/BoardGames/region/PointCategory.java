@@ -1,4 +1,4 @@
-package com.cptingle.BoardGames.games;
+package com.cptingle.BoardGames.region;
 
 public enum PointCategory {
 	SPAWN("spawns"),

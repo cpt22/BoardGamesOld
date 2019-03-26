@@ -22,6 +22,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -435,6 +437,24 @@ public abstract class GameListener {
 	 */
 	public void onVehicleExit(VehicleExitEvent event) {
 		// TODO: IMPLEMENT
+		return;
+	}
+
+	/**
+	 * Handle opening of inventory
+	 * 
+	 * @param event
+	 */
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		return;
+	}
+
+	/**
+	 * Handle interaction with inventory
+	 * 
+	 * @param event
+	 */
+	public void onInventoryInteract(InventoryInteractEvent event) {
 		return;
 	}
 

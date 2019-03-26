@@ -2,8 +2,6 @@ package com.cptingle.BoardGames.region;
 
 import org.bukkit.Material;
 
-import com.cptingle.BoardGames.games.PointCategory;
-
 public interface RegionPoint {
 	/**
 	 * Gets the category/type of region point that the point is

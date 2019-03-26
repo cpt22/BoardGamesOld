@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,6 +30,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -228,16 +229,19 @@ public class BGGlobalListener implements Listener {
 			game.getEventListener().onPotionSplash(event);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void projectileHit(final ProjectileHitEvent event) {
 		for (Game game : gm.getGames()) {
 			game.getEventListener().onProjectileHit(event);
 		}
-		if (event.getEntity().getType() == EntityType.ARROW && event.getEntity().getShooter() instanceof Player && event.getHitBlock() != null) {
-			//event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(), 30F);//(event.getEntity().getLocation(), EntityType.PRIMED_TNT);
+		if (event.getEntity().getType() == EntityType.ARROW && event.getEntity().getShooter() instanceof Player
+				&& event.getHitBlock() != null) {
+			// event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(),
+			// 30F);//(event.getEntity().getLocation(), EntityType.PRIMED_TNT);
 			for (int i = 0; i < 15; i++) {
-				event.getEntity().getLocation().getWorld().spawnEntity(event.getEntity().getLocation().add(i,0,i), EntityType.LLAMA);//(event.getEntity().getLocation(), EntityType.PRIMED_TNT);
+				event.getEntity().getLocation().getWorld().spawnEntity(event.getEntity().getLocation().add(i, 0, i),
+						EntityType.LLAMA);// (event.getEntity().getLocation(), EntityType.PRIMED_TNT);
 			}
 			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				@Override
@@ -307,7 +311,6 @@ public class BGGlobalListener implements Listener {
 		for (Game game : gm.getGames())
 			game.getEventListener().onPlayerInteract(event);
 	}
-	
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerJoin(PlayerJoinEvent event) {
@@ -340,6 +343,18 @@ public class BGGlobalListener implements Listener {
 		}
 
 		// plugin.restoreInventory(event.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void inventoryOpen(InventoryOpenEvent event) {
+		for (Game game : gm.getGames())
+			game.getEventListener().onInventoryOpen(event);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void inventoryInteract(InventoryInteractEvent event) {
+		for (Game game : gm.getGames())
+			game.getEventListener().onInventoryInteract(event);
 	}
 
 	public enum TeleportResponse {

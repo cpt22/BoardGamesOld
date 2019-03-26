@@ -2,8 +2,6 @@ package com.cptingle.BoardGames.region;
 
 import org.bukkit.Material;
 
-import com.cptingle.BoardGames.games.PointCategory;
-
 public enum RegionPointMaster implements RegionPoint {
 	R1(PointCategory.POINT, "r1", Material.RED_WOOL),
 	R2(PointCategory.POINT, "r2", Material.RED_WOOL);

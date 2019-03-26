@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.framework.Gameboard;
-import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
+import com.cptingle.BoardGames.games.tictactoe.components.TicTacToeMaterial;
 import com.cptingle.BoardGames.games.tictactoe.components.TicTacToeRegionPoint;
 import com.cptingle.BoardGames.util.GridPoint2D;
 
@@ -36,9 +36,9 @@ public class TicTacToeGameboard extends Gameboard {
 	// Materials
 	@Override
 	protected void initMaterials() {
-		gameMaterials.put(MaterialType.P1_PIECE, getMaterial(MaterialType.P1_PIECE, "BLUE_CARPET"));
-		gameMaterials.put(MaterialType.P2_PIECE, getMaterial(MaterialType.P2_PIECE, "RED_CARPET"));
-		gameMaterials.put(MaterialType.SQUARE, getMaterial(MaterialType.SQUARE, "POLISHED_ANDESITE"));
+		gameMaterials.put(TicTacToeMaterial.P1_PIECE, getMaterial(TicTacToeMaterial.P1_PIECE, "BLUE_CARPET"));
+		gameMaterials.put(TicTacToeMaterial.P2_PIECE, getMaterial(TicTacToeMaterial.P2_PIECE, "RED_CARPET"));
+		gameMaterials.put(TicTacToeMaterial.SQUARE, getMaterial(TicTacToeMaterial.SQUARE, "POLISHED_ANDESITE"));
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class TicTacToeGameboard extends Gameboard {
 				board[x][z] = PlayerType.NONE;
 				locationPointMap.put(p, l);
 
-				l.getBlock().setType(gameMaterials.get(MaterialType.SQUARE));
+				l.getBlock().setType(gameMaterials.get(TicTacToeMaterial.SQUARE));
 				l.clone().add(0, 1, 0).getBlock().setType(Material.AIR);
 			}
 		}
@@ -106,9 +106,9 @@ public class TicTacToeGameboard extends Gameboard {
 
 		board[point.X()][point.Z()] = game.turn();
 		if (game.turn() == PlayerType.PLAYER_ONE)
-			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(MaterialType.P1_PIECE));
+			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(TicTacToeMaterial.P1_PIECE));
 		else
-			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(MaterialType.P2_PIECE));
+			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(TicTacToeMaterial.P2_PIECE));
 		
 		for (Player plr : game.getAllPlayers())
 			p.playSound(plr.getLocation(), Sound.BLOCK_WOOL_PLACE, 10, 1);

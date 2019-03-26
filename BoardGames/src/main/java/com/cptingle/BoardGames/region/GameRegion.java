@@ -23,7 +23,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.PointCategory;
 
 public class GameRegion {
 

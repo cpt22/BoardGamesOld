@@ -1,24 +1,17 @@
 package com.cptingle.BoardGames.games;
 
-public enum MaterialType {
-	// CHECKERS
-	RED_SQUARE("red-square-block"),
-	BLACK_SQUARE("black-square-block"),
-	KING("king-block"),
-	SELECTED("selected-block"),
-	// SHARED
-	SQUARE("square-block"),
-	P1_PIECE("p1-piece-block"),
-	P2_PIECE("p2-piece-block");
+import org.bukkit.Material;
+
+public interface MaterialType {
+	/**
+	 * Gets the associated material
+	 * @return
+	 */
+	public Material getMaterial();
 	
-	private String path;
-	
-	MaterialType(String p) {
-		this.path = p;
-	}
-	
-	public String getPath() {
-		return path;
-	}
-	
+	/**
+	 * Gets the config name of this material type
+	 * @return
+	 */
+	public String configName();
 }

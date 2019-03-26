@@ -24,6 +24,7 @@ import com.cptingle.BoardGames.games.GameType;
 import com.cptingle.BoardGames.games.battleship.BattleshipGame;
 import com.cptingle.BoardGames.games.checkers.CheckersGame;
 import com.cptingle.BoardGames.games.minesweeper.MinesweeperGame;
+import com.cptingle.BoardGames.games.sudoku.SudokuGame;
 import com.cptingle.BoardGames.games.tictactoe.TicTacToeGame;
 import com.cptingle.BoardGames.messaging.Messenger;
 import com.cptingle.BoardGames.util.config.ConfigUtils;
@@ -508,6 +509,9 @@ public class GameMaster {
 			break;
 		case MINESWEEPER:
 			game = new MinesweeperGame(plugin, section, name, world);
+			break;
+		case SUDOKU:
+			game = new SudokuGame(plugin, section, name, world);
 			break;
 		}
 		return game;

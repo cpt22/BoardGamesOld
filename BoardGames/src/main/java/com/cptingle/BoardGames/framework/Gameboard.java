@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.games.MaterialType;
+import com.cptingle.BoardGames.games.MaterialTypeOld;
 import com.cptingle.BoardGames.region.RegionPoint;
 import com.cptingle.BoardGames.util.GridPoint2D;
 import com.google.common.collect.BiMap;
@@ -57,7 +58,7 @@ public abstract class Gameboard {
 	}
 
 	public Material getMaterial(MaterialType t, String dflt) {
-		String configMaterial = game.getSpecificSettings().getString(t.getPath());
+		String configMaterial = game.getSpecificSettings().getString(t.configName());
 
 		if (configMaterial == null || configMaterial.trim().equals(""))
 			configMaterial = dflt;

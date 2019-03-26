@@ -11,10 +11,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.cptingle.BoardGames.framework.Gameboard;
-import com.cptingle.BoardGames.games.MaterialType;
 import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.checkers.components.CheckerPiece;
 import com.cptingle.BoardGames.games.checkers.components.CheckerSquare;
+import com.cptingle.BoardGames.games.checkers.components.CheckersMaterial;
 import com.cptingle.BoardGames.games.checkers.components.CheckersRegionPoint;
 import com.cptingle.BoardGames.games.checkers.components.SquareType;
 import com.cptingle.BoardGames.games.checkers.components.exceptions.InvalidMoveException;
@@ -91,7 +91,7 @@ public class CheckersGameboard extends Gameboard {
 					t2 = x;
 				}
 				if (((t1 % 2 == 0) && (t2 % 2 == 1)) || ((t1 % 2 == 1) && (t2 % 2 == 0))) {
-					board[x][z].setBlock(getMaterial(MaterialType.BLACK_SQUARE));
+					board[x][z].setBlock(getMaterial(CheckersMaterial.BLACK_SQUARE));
 					if (t1 < 3) {
 						CheckerPiece gp = new CheckerPiece(game, this, PlayerType.PLAYER_ONE, p);
 						board[x][z].setPiece(gp);
@@ -105,7 +105,7 @@ public class CheckersGameboard extends Gameboard {
 					}
 				} else {
 					board[x][z].setType(SquareType.RED);
-					board[x][z].setBlock(getMaterial(MaterialType.RED_SQUARE));
+					board[x][z].setBlock(getMaterial(CheckersMaterial.RED_SQUARE));
 				}
 			}
 		}
@@ -113,12 +113,12 @@ public class CheckersGameboard extends Gameboard {
 
 	// Materials
 	protected void initMaterials() {
-		gameMaterials.put(MaterialType.RED_SQUARE, getMaterial(MaterialType.RED_SQUARE, "RED_CONCRETE"));
-		gameMaterials.put(MaterialType.BLACK_SQUARE, getMaterial(MaterialType.BLACK_SQUARE, "BLACK_CONCRETE"));
-		gameMaterials.put(MaterialType.P1_PIECE, getMaterial(MaterialType.P1_PIECE, "ACACIA_FENCE"));
-		gameMaterials.put(MaterialType.P2_PIECE, getMaterial(MaterialType.P2_PIECE, "DARK_OAK_FENCE"));
-		gameMaterials.put(MaterialType.KING, getMaterial(MaterialType.KING, "CREEPER_HEAD"));
-		gameMaterials.put(MaterialType.SELECTED, getMaterial(MaterialType.SELECTED, "BIRCH_FENCE"));
+		gameMaterials.put(CheckersMaterial.RED_SQUARE, getMaterial(CheckersMaterial.RED_SQUARE, "RED_CONCRETE"));
+		gameMaterials.put(CheckersMaterial.BLACK_SQUARE, getMaterial(CheckersMaterial.BLACK_SQUARE, "BLACK_CONCRETE"));
+		gameMaterials.put(CheckersMaterial.P1_PIECE, getMaterial(CheckersMaterial.P1_PIECE, "ACACIA_FENCE"));
+		gameMaterials.put(CheckersMaterial.P2_PIECE, getMaterial(CheckersMaterial.P2_PIECE, "DARK_OAK_FENCE"));
+		gameMaterials.put(CheckersMaterial.KING, getMaterial(CheckersMaterial.KING, "CREEPER_HEAD"));
+		gameMaterials.put(CheckersMaterial.SELECTED, getMaterial(CheckersMaterial.SELECTED, "BIRCH_FENCE"));
 	}
 
 	public boolean isLocationInBoard(Location l) {
