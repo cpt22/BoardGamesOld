@@ -124,95 +124,89 @@ public class BGUtils {
 				world.getBlockAt(x2, j, k).setType(Material.STONE_BRICKS);
 			}
 		}
-		
-		// Build a monster floor, and some Obsidian foundation.
-        for (int i = x1; i <= x2; i++)
-        {
-            for (int k = z1; k <= z2; k++)
-            {
-                world.getBlockAt(i,y1,k).setType(Material.SANDSTONE);
-            }
-        }
-        
-        // Make a hippie roof.
-        for (int i = x1; i <= x2; i++)
-        {
-            for (int k = z1; k <= z2; k++)
-                world.getBlockAt(i,y2,k).setType(Material.GLASS);
-        }
-        
-        // Monster bulldoze
-        for (int i = x1+1; i < x2; i++) {
-            for (int j = y1+1; j < y2; j++) {
-                for (int k = z1+1; k < z2; k++) {
-                    world.getBlockAt(i,j,k).setType(Material.AIR);
-                }
-            }
-        }
-        
-        for (int r = bx1; r <= bx2; r++) {
-        		for (int c = bz1; c <= bz2; c++) {
-        			int bXPos = r-bx1;
-        			int bZPos = c-bz1;
-        			if (((bXPos % 2 == 0) && (bZPos %2 == 1)) || ((bXPos % 2 == 1) && (bZPos %2 == 0))) {
-        				//world.getBlockAt(r,by, c).setType(Material.BLACK_CONCRETE);
-    					if ((r-bx1) < 3) {
-    					//	world.getBlockAt(r,by + 1, c).setType(Material.ACACIA_FENCE);
-    					} else if ((r-bx1) > 4) {
-    					//	world.getBlockAt(r,by + 1, c).setType(Material.DARK_OAK_FENCE);
-    					}
-    				} else {
-    					//world.getBlockAt(r,by,c).setType(Material.RED_CONCRETE);
-    				}
-        		}
-        }
-        
-     // Set up the Region points. 
-        GameRegion region = game.getRegion();
-        region.set("p1", new Location(world, x1, y1, z1));
-        region.set("p2", new Location(world, x2, y2+1, z2));
-        
-        region.set("b1", new Location(world, bx1, by, bz1));
-        region.set("b2", new Location(world, bx2, by, bz1));
-        
-        region.set("p1Spawn", new Location(world, loc.getX() - 4, y1+1, loc.getZ()));
-        region.set("p2Spawn", new Location(world, loc.getX() + 4, y1+1, loc.getZ()));
 
-        region.save();
-        
-        gm.reloadConfig();
-        return true;
+		// Build a monster floor, and some Obsidian foundation.
+		for (int i = x1; i <= x2; i++) {
+			for (int k = z1; k <= z2; k++) {
+				world.getBlockAt(i, y1, k).setType(Material.SANDSTONE);
+			}
+		}
+
+		// Make a hippie roof.
+		for (int i = x1; i <= x2; i++) {
+			for (int k = z1; k <= z2; k++)
+				world.getBlockAt(i, y2, k).setType(Material.GLASS);
+		}
+
+		// Monster bulldoze
+		for (int i = x1 + 1; i < x2; i++) {
+			for (int j = y1 + 1; j < y2; j++) {
+				for (int k = z1 + 1; k < z2; k++) {
+					world.getBlockAt(i, j, k).setType(Material.AIR);
+				}
+			}
+		}
+
+		for (int r = bx1; r <= bx2; r++) {
+			for (int c = bz1; c <= bz2; c++) {
+				int bXPos = r - bx1;
+				int bZPos = c - bz1;
+				if (((bXPos % 2 == 0) && (bZPos % 2 == 1)) || ((bXPos % 2 == 1) && (bZPos % 2 == 0))) {
+					// world.getBlockAt(r,by, c).setType(Material.BLACK_CONCRETE);
+					if ((r - bx1) < 3) {
+						// world.getBlockAt(r,by + 1, c).setType(Material.ACACIA_FENCE);
+					} else if ((r - bx1) > 4) {
+						// world.getBlockAt(r,by + 1, c).setType(Material.DARK_OAK_FENCE);
+					}
+				} else {
+					// world.getBlockAt(r,by,c).setType(Material.RED_CONCRETE);
+				}
+			}
+		}
+
+		// Set up the Region points.
+		GameRegion region = game.getRegion();
+		region.set("p1", new Location(world, x1, y1, z1));
+		region.set("p2", new Location(world, x2, y2 + 1, z2));
+
+		region.set("b1", new Location(world, bx1, by, bz1));
+		region.set("b2", new Location(world, bx2, by, bz1));
+
+		region.set("p1Spawn", new Location(world, loc.getX() - 4, y1 + 1, loc.getZ()));
+		region.set("p2Spawn", new Location(world, loc.getX() + 4, y1 + 1, loc.getZ()));
+
+		region.save();
+
+		gm.reloadConfig();
+		return true;
 	}
-	
+
 	public static boolean autoDegenerate(String name, BoardGames plugin, boolean error) {
 		File file = new File("plugins" + sep + "BoardGames" + sep + "agbackup" + sep + name + ".tmp");
-        HashMap<EntityPosition,Material> preciousPatch;
-        try
-        {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            preciousPatch = (HashMap<EntityPosition,Material>) ois.readObject();
-            ois.close();
-        }
-        catch (Exception e)
-        {
-            if (error) plugin.getLogger().warning("Couldn't find backup file for game '" + name + "'");
-            return false;
-        }
-        
-        World world = plugin.getServer().getWorld(preciousPatch.keySet().iterator().next().getWorld());
-        
-        for (Map.Entry<EntityPosition,Material> entry : preciousPatch.entrySet())
-        {
-            world.getBlockAt(entry.getKey().getLocation(world)).setType(entry.getValue());
-        }
+		HashMap<EntityPosition, Material> preciousPatch;
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			preciousPatch = (HashMap<EntityPosition, Material>) ois.readObject();
+			ois.close();
+		} catch (Exception e) {
+			if (error)
+				plugin.getLogger().warning("Couldn't find backup file for game '" + name + "'");
+			return false;
+		}
 
-        plugin.getConfig().set("games." + name, null);
-        plugin.saveConfig();
-        
-        file.delete();
-        
-        plugin.getGameMaster().reloadConfig();
-        return true;
+		World world = plugin.getServer().getWorld(preciousPatch.keySet().iterator().next().getWorld());
+
+		for (Map.Entry<EntityPosition, Material> entry : preciousPatch.entrySet()) {
+			world.getBlockAt(entry.getKey().getLocation(world)).setType(entry.getValue());
+		}
+
+		plugin.getConfig().set("games." + name, null);
+		plugin.saveConfig();
+
+		file.delete();
+
+		plugin.getGameMaster().reloadConfig();
+		return true;
 	}
 }

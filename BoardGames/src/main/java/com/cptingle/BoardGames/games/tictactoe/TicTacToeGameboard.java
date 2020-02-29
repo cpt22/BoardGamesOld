@@ -66,8 +66,8 @@ public class TicTacToeGameboard extends Gameboard {
 					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + -mod * x,
 							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
 				} else {
-					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x,
-							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x, anchorPoint.getBlockY(),
+							anchorPoint.getBlockZ() + mod * z);
 				}
 				board[x][z] = PlayerType.NONE;
 				locationPointMap.put(p, l);
@@ -109,7 +109,7 @@ public class TicTacToeGameboard extends Gameboard {
 			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(TicTacToeMaterial.P1_PIECE));
 		else
 			l.clone().add(0, 1, 0).getBlock().setType(getMaterial(TicTacToeMaterial.P2_PIECE));
-		
+
 		for (Player plr : game.getAllPlayers())
 			p.playSound(plr.getLocation(), Sound.BLOCK_WOOL_PLACE, 10, 1);
 

@@ -2,7 +2,6 @@ package com.cptingle.BoardGames.games.checkers.components.exceptions;
 
 public class InvalidSquareException extends Exception {
 
-
 	/**
 	 * 
 	 */

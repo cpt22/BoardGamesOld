@@ -3,8 +3,7 @@ package com.cptingle.BoardGames.region;
 import org.bukkit.Material;
 
 public enum RegionPointMaster implements RegionPoint {
-	R1(PointCategory.POINT, "r1", Material.RED_WOOL),
-	R2(PointCategory.POINT, "r2", Material.RED_WOOL);
+	R1(PointCategory.POINT, "r1", Material.RED_WOOL), R2(PointCategory.POINT, "r2", Material.RED_WOOL);
 
 	private PointCategory category;
 	private String common;
@@ -20,22 +19,22 @@ public enum RegionPointMaster implements RegionPoint {
 	public PointCategory getCategory() {
 		return category;
 	}
-	
+
 	@Override
 	public String commonName() {
 		return common;
 	}
-	
+
 	@Override
 	public String configName() {
 		return name().toLowerCase().replaceAll("_", "-");
 	}
-	
+
 	@Override
 	public Material getShowMaterial() {
 		return showMaterial;
 	}
-	
+
 	public static RegionPoint getFromCommonName(String cn) {
 		for (RegionPoint rp : RegionPointMaster.values()) {
 			if (rp.commonName().equals(cn))
@@ -52,7 +51,5 @@ public enum RegionPointMaster implements RegionPoint {
 		}
 		return null;
 	}
-	
-	
 
 }

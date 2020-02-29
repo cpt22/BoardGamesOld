@@ -10,11 +10,7 @@ import com.cptingle.BoardGames.commands.Commands;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.messaging.Msg;
 
-@CommandInfo(name = "leave", 
-pattern = "l|le((.*))?", 
-usage = "/bg leave", 
-desc = "leave the game", 
-permission = "boardgames.use.leave")
+@CommandInfo(name = "leave", pattern = "l|le((.*))?", usage = "/bg leave", desc = "leave the game", permission = "boardgames.use.leave")
 public class LeaveCommand implements Command {
 
 	@Override
@@ -25,17 +21,17 @@ public class LeaveCommand implements Command {
 		}
 
 		// Unwrap the sender.
-        Player p = Commands.unwrap(sender);
-        
-        Game game = gm.getGameWithPlayer(p);
-        
-        if (game != null) {
-        		game.playerLeave(p);
-        		game.getMessenger().tell(p, Msg.PLAYER_LEAVE);
-        } else {
-        		gm.getGlobalMessenger().tell(p, Msg.PLAYER_NOT_IN_GAME);
-        }
-        
+		Player p = Commands.unwrap(sender);
+
+		Game game = gm.getGameWithPlayer(p);
+
+		if (game != null) {
+			game.playerLeave(p);
+			game.getMessenger().tell(p, Msg.PLAYER_LEAVE);
+		} else {
+			gm.getGlobalMessenger().tell(p, Msg.PLAYER_NOT_IN_GAME);
+		}
+
 		return true;
 	}
 

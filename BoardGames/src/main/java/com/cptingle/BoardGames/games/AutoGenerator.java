@@ -18,20 +18,20 @@ import com.cptingle.BoardGames.util.EntityPosition;
 public class AutoGenerator {
 	public static final String sep = File.separator;
 
-	/*protected BoardGames plugin;
-	protected GameMaster gm;
+	/*
+	 * protected BoardGames plugin; protected GameMaster gm;
+	 * 
+	 * public AutoGenerator(BoardGames plugin) { this.plugin = plugin; this.gm =
+	 * plugin.getGameMaster(); }
+	 */
 
-	public AutoGenerator(BoardGames plugin) {
-		this.plugin = plugin;
-		this.gm = plugin.getGameMaster();
-	}	*/
-	
 	/**
 	 * Wrapper for store Patch
-	 * @param loc - Player location
+	 * 
+	 * @param loc    - Player location
 	 * @param radius - Radius around player
 	 * @param height - how far up and down
-	 * @param name - name of game
+	 * @param name   - name of game
 	 * @param plugin
 	 */
 	public static boolean storePatch(Location loc, int radius, int height, String name, BoardGames plugin) {
@@ -40,16 +40,17 @@ public class AutoGenerator {
 
 	/**
 	 * Store region data into file
-	 * @param loc - Player location
+	 * 
+	 * @param loc    - Player location
 	 * @param radius - Radius around player
-	 * @param up - how high up
-	 * @param down - how low
-	 * @param name - name of game
+	 * @param up     - how high up
+	 * @param down   - how low
+	 * @param name   - name of game
 	 * @param plugin
 	 * @return
 	 */
 	public static boolean storePatch(Location loc, int radius, int up, int down, String name, BoardGames plugin) {
-		//GameMaster gm = plugin.getGameMaster();
+		// GameMaster gm = plugin.getGameMaster();
 		World world = loc.getWorld();
 		// Get the bounds.
 		int x1 = (int) loc.getX() - radius;
@@ -89,6 +90,7 @@ public class AutoGenerator {
 
 	/**
 	 * Auto Degenerate named game
+	 * 
 	 * @param name
 	 * @param error
 	 * @return

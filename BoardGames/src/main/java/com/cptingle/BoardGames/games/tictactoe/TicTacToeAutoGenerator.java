@@ -28,11 +28,10 @@ public class TicTacToeAutoGenerator {
 		int z2 = (int) loc.getZ() + radius;
 
 		int bx1 = (int) loc.getX() - 1;
-		//int bx2 = (int) loc.getX() + 1;
+		// int bx2 = (int) loc.getX() + 1;
 		int by = (int) loc.getY() - 1;
 		int bz1 = (int) loc.getZ() - 1;
-		//int bz2 = (int) loc.getZ() + 1;
-
+		// int bz2 = (int) loc.getZ() + 1;
 
 		// Build some walls
 		for (int i = x1; i < x2; i++) {

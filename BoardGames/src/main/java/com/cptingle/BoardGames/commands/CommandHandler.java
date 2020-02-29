@@ -106,8 +106,7 @@ public class CommandHandler implements CommandExecutor {
 	/**
 	 * Get all commands that match a given string.
 	 * 
-	 * @param arg
-	 *            the given string
+	 * @param arg the given string
 	 * @return a list of commands whose patterns match the given string
 	 */
 	private List<Command> getMatchingCommands(String arg) {
@@ -127,25 +126,23 @@ public class CommandHandler implements CommandExecutor {
 	 * Show the usage and description messages of a command to a player. The usage
 	 * will only be shown, if the player has permission for the command.
 	 * 
-	 * @param cmd
-	 *            a Command
-	 * @param sender
-	 *            a CommandSender
+	 * @param cmd    a Command
+	 * @param sender a CommandSender
 	 */
 	private void showUsage(Command cmd, CommandSender sender, boolean prefix) {
 		CommandInfo info = cmd.getClass().getAnnotation(CommandInfo.class);
 		if (!plugin.has(sender, info.permission()))
 			return;
 
-		gm.getGlobalMessenger().tell(sender, (prefix ? "Usage: " : "") + info.usage() + " " + ChatColor.YELLOW + info.desc());
+		gm.getGlobalMessenger().tell(sender,
+				(prefix ? "Usage: " : "") + info.usage() + " " + ChatColor.YELLOW + info.desc());
 	}
 
 	/**
 	 * Remove the first argument of a string. This is because the very first element
 	 * of the arguments array will be the command itself.
 	 * 
-	 * @param args
-	 *            an array of length n
+	 * @param args an array of length n
 	 * @return the same array minus the first element, and thus of length n-1
 	 */
 	private String[] trimFirstArg(String[] args) {
@@ -155,8 +152,7 @@ public class CommandHandler implements CommandExecutor {
 	/**
 	 * List all the available MobArena commands for the CommandSender.
 	 * 
-	 * @param sender
-	 *            a player or the console
+	 * @param sender a player or the console
 	 */
 	private void showHelp(CommandSender sender) {
 		StringBuilder user = new StringBuilder();
@@ -208,7 +204,7 @@ public class CommandHandler implements CommandExecutor {
 		register(ReloadCommand.class);
 
 		// Setup Commands
-		//register(SetupCommand.class);
+		// register(SetupCommand.class);
 		register(SettingCommand.class);
 		register(SetupCommand.class);
 
@@ -224,8 +220,7 @@ public class CommandHandler implements CommandExecutor {
 	 * Register a command. The Command's CommandInfo annotation is queried to find
 	 * its pattern string, which is used to map the commands.
 	 * 
-	 * @param c
-	 *            a Command
+	 * @param c a Command
 	 */
 	public void register(Class<? extends Command> c) {
 		CommandInfo info = c.getAnnotation(CommandInfo.class);

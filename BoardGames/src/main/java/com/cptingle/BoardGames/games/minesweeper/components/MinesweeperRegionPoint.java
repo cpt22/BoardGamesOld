@@ -24,22 +24,22 @@ public enum MinesweeperRegionPoint implements RegionPoint {
 	public PointCategory getCategory() {
 		return category;
 	}
-	
+
 	@Override
 	public String configName() {
 		return name().toLowerCase().replaceAll("_", "-");
 	}
-	
+
 	@Override
 	public String commonName() {
 		return common;
 	}
-	
+
 	@Override
 	public Material getShowMaterial() {
 		return showMaterial;
 	}
-	
+
 	public static RegionPoint getFromCommonName(String cn) {
 		for (RegionPoint rp : MinesweeperRegionPoint.values()) {
 			if (rp.commonName().equals(cn))

@@ -17,8 +17,6 @@ import com.cptingle.BoardGames.games.PlayerType;
 import com.cptingle.BoardGames.games.minesweeper.components.MinesweeperRegionPoint;
 import com.cptingle.BoardGames.region.RegionPoint;
 
-
-
 public class MinesweeperGame extends Game {
 	private static final String RESOURCE_PACK_URL = "https://christmasonevergreen.com/resourcepacks/minesweeper-13_2.zip";
 	private static final String RESOURCE_PACK_EMPTY_URL = "https://christmasonevergreen.com/resourcepacks/emptypack.zip";
@@ -29,7 +27,8 @@ public class MinesweeperGame extends Game {
 	public MinesweeperGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.MINESWEEPER, name, world);
 		this.listener = new MinesweeperListener(plugin, this);
-		this.bossBar = plugin.getServer().createBossBar(new NamespacedKey(plugin, name + "-minesleft"), "Mines Left:", BarColor.RED, BarStyle.SOLID);
+		this.bossBar = plugin.getServer().createBossBar(new NamespacedKey(plugin, name + "-minesleft"), "Mines Left:",
+				BarColor.RED, BarStyle.SOLID);
 	}
 
 	public MinesweeperGameboard getGameboard() {
@@ -80,7 +79,7 @@ public class MinesweeperGame extends Game {
 		bossBar.setProgress(1.0);
 		bossBar.setTitle("Mines Remaining: " + gameboard.getNumMines());
 	}
-	
+
 	protected BossBar getBossBar() {
 		return bossBar;
 	}
@@ -92,7 +91,7 @@ public class MinesweeperGame extends Game {
 			gameboard.reset();
 		}
 	}
-	
+
 	@Override
 	public void doWin(PlayerType pt) {
 		running = false;
@@ -103,7 +102,7 @@ public class MinesweeperGame extends Game {
 			}
 		}, 10L);
 	}
-	
+
 	public void lose() {
 		Player p = playerMap.get(PlayerType.PLAYER_ONE);
 		messenger.tell(p, "You lose!");
@@ -118,8 +117,9 @@ public class MinesweeperGame extends Game {
 	}
 
 	@Override
-	public void nextTurn() {}
-	
+	public void nextTurn() {
+	}
+
 	@Override
 	public void initialize() {
 		this.gameboard = new MinesweeperGameboard(this);

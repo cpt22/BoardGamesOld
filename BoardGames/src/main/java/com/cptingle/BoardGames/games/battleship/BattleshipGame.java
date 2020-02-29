@@ -14,19 +14,19 @@ public class BattleshipGame extends Game {
 	public BattleshipGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.BATTLESHIP, name, world);
 		this.listener = new BattleshipListener(plugin, this);
-		
-		type = GameType.BATTLESHIP; 
+
+		type = GameType.BATTLESHIP;
 		// TODO Auto-generated constructor stub
 	}
 
 	public void initialize() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void forceEnd() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -44,13 +44,13 @@ public class BattleshipGame extends Game {
 	@Override
 	protected void begin() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void nextTurn() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -70,6 +70,5 @@ public class BattleshipGame extends Game {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

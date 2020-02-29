@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class GamePlayer {
-	
+
 	private Player player;
 	private ItemStack[] inventory;
 	private Location returnLocation;
@@ -16,17 +16,17 @@ public class GamePlayer {
 		this.inventory = p.getInventory().getContents();
 		this.returnLocation = p.getLocation();
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public ItemStack[] getInventory() {
 		return inventory;
 	}
-	
+
 	public Location getReturnLocation() {
 		return returnLocation;
 	}
-	
+
 }

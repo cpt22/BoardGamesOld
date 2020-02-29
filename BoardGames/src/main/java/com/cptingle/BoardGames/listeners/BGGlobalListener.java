@@ -350,7 +350,7 @@ public class BGGlobalListener implements Listener {
 		for (Game game : gm.getGames())
 			game.getEventListener().onInventoryOpen(event);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void inventoryInteract(InventoryInteractEvent event) {
 		for (Game game : gm.getGames())

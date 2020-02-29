@@ -23,8 +23,7 @@ public class CheckerPiece {
 	private Location location;
 	private GridPoint2D point;
 
-	public CheckerPiece(Game game, CheckersGameboard gameboard, PlayerType player,
-			GridPoint2D point) {
+	public CheckerPiece(Game game, CheckersGameboard gameboard, PlayerType player, GridPoint2D point) {
 		this.game = game;
 		this.gameboard = gameboard;
 		this.location = gameboard.getLocationFromPoint(point).clone().add(0, 1, 0);
@@ -122,6 +121,6 @@ public class CheckerPiece {
 
 	public void relocate(CheckerSquare toSquare) {
 		toSquare.setPiece(this);
-		this.move(toSquare.getLocation().clone().add(0,1,0), toSquare.getPoint());
+		this.move(toSquare.getLocation().clone().add(0, 1, 0), toSquare.getPoint());
 	}
 }

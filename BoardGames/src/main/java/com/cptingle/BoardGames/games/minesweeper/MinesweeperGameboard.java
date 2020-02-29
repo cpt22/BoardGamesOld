@@ -53,7 +53,7 @@ public class MinesweeperGameboard {
 		game.getRegion().fixIfNeedFixing(MinesweeperRegionPoint.BOARD_POINT_1, MinesweeperRegionPoint.BOARD_POINT_2);
 		b1 = game.getRegion().getPoint(MinesweeperRegionPoint.BOARD_POINT_1);
 		b2 = game.getRegion().getPoint(MinesweeperRegionPoint.BOARD_POINT_2);
-		
+
 		this.anchorPoint = b1;
 
 		boardWidth = b2.getBlockX() - b1.getBlockX();

@@ -3,7 +3,7 @@ package com.cptingle.BoardGames.util;
 import java.io.Serializable;
 
 public class GridPoint3D implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -13,17 +13,17 @@ public class GridPoint3D implements Serializable {
 	 * X Location
 	 */
 	private int x;
-	
+
 	/**
 	 * Y Location
 	 */
 	private int y;
-	
+
 	/**
 	 * Z Location
 	 */
 	private int z;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -32,44 +32,43 @@ public class GridPoint3D implements Serializable {
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	/**
 	 * Point Setters
 	 */
 	public void setX(int x) {
 		this.x = x;
 	}
-	
+
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+
 	public void setZ(int z) {
 		this.z = z;
 	}
-	
+
 	public void setLocation(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
-	
 	/**
 	 * Point getters
 	 */
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 	public int getZ() {
 		return z;
 	}
-	
+
 	/**
 	 * Other Methods
 	 */
@@ -79,11 +78,11 @@ public class GridPoint3D implements Serializable {
 		x = y;
 		y = tempX;
 	}
-	
+
 	public GridPoint3D translate(int dx, int dy, int dz) {
 		return new GridPoint3D(x + dx, y + dy, z + dz);
 	}
-	
+
 	/**
 	 * Equals
 	 */
@@ -96,7 +95,7 @@ public class GridPoint3D implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public int hashCode() {
 		return Integer.parseInt("" + x + "" + y + "" + z);
 	}

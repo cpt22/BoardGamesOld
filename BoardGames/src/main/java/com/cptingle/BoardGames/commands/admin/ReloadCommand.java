@@ -21,13 +21,14 @@ public class ReloadCommand implements Command {
 			gm.getGlobalMessenger().tell(sender, Msg.CONFIG_RELOADED);
 		} else if (args.length == 1) {
 			Game game = gm.getGameWithName(args[0]);
-			
+
 			if (game == null) {
 				gm.getGlobalMessenger().tell(sender, Msg.GAME_DOES_NOT_EXIST);
 				return true;
 			}
-			
-			gm.getGlobalMessenger().tell(sender, "Game " + ChatColor.YELLOW +  game.getName() + "&r was reloaded from config!");
+
+			gm.getGlobalMessenger().tell(sender,
+					"Game " + ChatColor.YELLOW + game.getName() + "&r was reloaded from config!");
 			gm.reloadGame(game.getName());
 		}
 

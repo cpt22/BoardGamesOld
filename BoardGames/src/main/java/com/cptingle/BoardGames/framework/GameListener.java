@@ -1,6 +1,7 @@
 package com.cptingle.BoardGames.framework;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
@@ -40,6 +41,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.listeners.BGGlobalListener.TeleportResponse;
+import com.cptingle.BoardGames.messaging.Msg;
 import com.cptingle.BoardGames.region.GameRegion;
 
 public abstract class GameListener {
@@ -122,8 +124,11 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onBlockBurn(BlockBurnEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		if (game.inEditMode())
+			return;
+
+		if (game.getRegion().contains(event.getBlock().getLocation()))
+			event.setCancelled(true);
 	}
 
 	/**
@@ -152,8 +157,11 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onBlockIgnite(BlockIgniteEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		if (game.inEditMode())
+			return;
+
+		if (game.getRegion().contains(event.getBlock().getLocation()))
+			event.setCancelled(true);
 	}
 
 	/**
@@ -188,8 +196,11 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		if (game.inEditMode())
+			return;
+
+		if (game.getRegion().contains(event.getBlock().getLocation()))
+			event.setCancelled(true);
 	}
 
 	/**
@@ -228,8 +239,11 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onEntityExplode(EntityExplodeEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		if (game.inEditMode())
+			return;
+
+		if (game.getRegion().contains(event.getLocation()))
+			event.setCancelled(true);
 	}
 
 	/**
@@ -238,8 +252,11 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onBlockExplode(BlockExplodeEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		if (game.inEditMode())
+			return;
+
+		if (game.getRegion().contains(event.getBlock().getLocation()))
+			event.setCancelled(true);
 	}
 
 	/**
@@ -344,8 +361,32 @@ public abstract class GameListener {
 	 * @param event
 	 */
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		// TODO: IMPLEMENT
-		return;
+		Player p = event.getPlayer();
+
+		if (event.isCancelled() || !game.inGame(p)) {
+			return;
+		}
+
+		// This is safe, because commands will always have at least one element.
+		String base = event.getMessage().split(" ")[0];
+
+		// Check if the entire base command is allowed.
+		if (plugin.getGameMaster().isAllowed(game, base)) {
+			return;
+		}
+
+		// If not, check if the specific command is allowed.
+		String noslash = event.getMessage().substring(1);
+		if (plugin.getGameMaster().isAllowed(game, noslash)) {
+			return;
+		}
+
+		// This is dirty, but it ensures that commands are indeed blocked.
+		// event.setMessage("/");
+
+		// Cancel the event regardless.
+		// event.setCancelled(true);
+		game.getMessenger().tell(p, Msg.MISC_COMMAND_NOT_ALLOWED);
 	}
 
 	/**

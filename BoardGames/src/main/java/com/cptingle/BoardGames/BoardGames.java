@@ -36,16 +36,16 @@ public class BoardGames extends JavaPlugin {
 
 	// Messaging
 	private Messenger messenger;
-	
+
 	// Other
 	private boolean isDisabling;
-	
+
 	@Override
 	public void onLoad() {
 	}
 
 	@Override
-	public void onEnable() {		
+	public void onEnable() {
 		isDisabling = false;
 		// Intialize config file
 		configFile = new File(getDataFolder(), "config.yml");
@@ -68,7 +68,7 @@ public class BoardGames extends JavaPlugin {
 		this.gameMaster.initialize();
 
 		// Register any inventories to restore.
-		//registerInventories();
+		// registerInventories();
 
 		// Register event listeners
 		registerListeners();
@@ -91,7 +91,7 @@ public class BoardGames extends JavaPlugin {
 
 		getLogger().info("disabled");
 	}
-	
+
 	public File getPluginFile() {
 		return getFile();
 	}
@@ -170,7 +170,7 @@ public class BoardGames extends JavaPlugin {
 	public CommandHandler getCommandHandler() {
 		return commandHandler;
 	}
-	
+
 	public Messenger getGlobalMessenger() {
 		return messenger;
 	}
@@ -191,7 +191,7 @@ public class BoardGames extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(new BGGlobalListener(this, gameMaster), this);
 	}
-	
+
 	public void addCommand(String cmd) {
 		getCommand(cmd).setExecutor(commandHandler);
 	}
@@ -207,7 +207,7 @@ public class BoardGames extends JavaPlugin {
 		}
 		return has((Player) sender, s);
 	}
-	
+
 	public boolean isDisabling() {
 		return isDisabling;
 	}

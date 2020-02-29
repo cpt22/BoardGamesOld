@@ -33,7 +33,6 @@ public class CheckersAutoGenerator {
 		int bz1 = (int) loc.getZ() - 3;
 		int bz2 = (int) loc.getZ() + 4;
 
-
 		// Build some walls
 		for (int i = x1; i < x2; i++) {
 			for (int j = y1; j <= y2; j++) {

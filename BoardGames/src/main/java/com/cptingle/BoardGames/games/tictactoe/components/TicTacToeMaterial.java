@@ -5,9 +5,7 @@ import org.bukkit.Material;
 import com.cptingle.BoardGames.games.MaterialType;
 
 public enum TicTacToeMaterial implements MaterialType {
-	SQUARE("square-block"), 
-	P1_PIECE("p1-piece-block"), 
-	P2_PIECE("p2-piece-block");
+	SQUARE("square-block"), P1_PIECE("p1-piece-block"), P2_PIECE("p2-piece-block");
 
 	private String configName;
 

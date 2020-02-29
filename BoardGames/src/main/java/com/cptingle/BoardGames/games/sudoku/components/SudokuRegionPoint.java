@@ -6,7 +6,7 @@ import com.cptingle.BoardGames.region.PointCategory;
 import com.cptingle.BoardGames.region.RegionPoint;
 
 public enum SudokuRegionPoint implements RegionPoint {
-	BOARD(PointCategory.POINT_DIR, "board", Material.PINK_WOOL), 
+	BOARD(PointCategory.POINT_DIR, "board", Material.PINK_WOOL),
 	SPAWN(PointCategory.SPAWN, "spawn", Material.BLUE_WOOL);
 
 	private PointCategory category;

@@ -18,7 +18,7 @@ public class CheckersGame extends Game {
 
 	public CheckersGame(BoardGames plugin, ConfigurationSection section, String name, World world) {
 		super(plugin, section, GameType.CHECKERS, name, world);
-		
+
 		this.listener = new CheckersListener(plugin, this);
 	}
 
@@ -51,26 +51,26 @@ public class CheckersGame extends Game {
 
 		playerSpawns.put(PlayerType.PLAYER_ONE, getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN));
 		playerSpawns.put(PlayerType.PLAYER_TWO, getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN));
-		/*Location p1Spawn = getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN);
-		Location p2Spawn = getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN);
-
-		if (p1Spawn == null || p2Spawn == null) {
-			setEnabled(false);
-		} else {
-			
-		}*/
+		/*
+		 * Location p1Spawn = getRegion().getSpawn(CheckersRegionPoint.P1_SPAWN);
+		 * Location p2Spawn = getRegion().getSpawn(CheckersRegionPoint.P2_SPAWN);
+		 * 
+		 * if (p1Spawn == null || p2Spawn == null) { setEnabled(false); } else {
+		 * 
+		 * }
+		 */
 	}
-	
+
 	@Override
 	public RegionPoint getRegionPointFromString(String s) {
 		return CheckersRegionPoint.matchString(s);
 	}
-	
-	@Override 
+
+	@Override
 	public RegionPoint[] getAllRegionPoints() {
 		return ((RegionPoint[]) CheckersRegionPoint.values());
 	}
-	
+
 	@Override
 	public RegionPoint getRegionPointFromCommonName(String name) {
 		return super.getRegionPointFromCommonName(CheckersRegionPoint.values(), name);

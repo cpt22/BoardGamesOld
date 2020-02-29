@@ -30,7 +30,7 @@ import com.cptingle.BoardGames.messaging.Messenger;
 import com.cptingle.BoardGames.util.config.ConfigUtils;
 
 public class GameMaster {
-	// basic things
+	// Basic things
 	private BoardGames plugin;
 	private FileConfiguration config;
 
@@ -93,8 +93,7 @@ public class GameMaster {
 	/**
 	 * Updates enabled state of plugin and stores it to the configuration file
 	 * 
-	 * @param true
-	 *            if plugin should be enabled, false if it should be disabled
+	 * @param true if plugin should be enabled, false if it should be disabled
 	 */
 	public void setEnabled(boolean value) {
 		enabled = value;
@@ -113,10 +112,8 @@ public class GameMaster {
 	/**
 	 * Adds a Game to the specified Player in the gameMap
 	 * 
-	 * @param p
-	 *            Player
-	 * @param g
-	 *            Game
+	 * @param p Player
+	 * @param g Game
 	 */
 	public void addPlayer(Player p, Game g) {
 		gameMap.put(p, g);
@@ -125,8 +122,7 @@ public class GameMaster {
 	/**
 	 * Removes Player-Game
 	 * 
-	 * @param p
-	 *            Player to search for
+	 * @param p Player to search for
 	 * @return {@link Game} if {@link Player} found or null if Player not found
 	 */
 	public Game removePlayer(Player p) {
@@ -171,8 +167,7 @@ public class GameMaster {
 	/**
 	 * Finds the enabled games in the provided list
 	 * 
-	 * @param games
-	 *            - List of games to check for enabled games
+	 * @param games - List of games to check for enabled games
 	 * @return {@link List} of all enabled games in the input list
 	 */
 	public List<Game> getEnabledGames(List<Game> games) {
@@ -187,8 +182,7 @@ public class GameMaster {
 	/**
 	 * Get games permitted for the given player
 	 * 
-	 * @param p
-	 *            - Player
+	 * @param p - Player
 	 * @return List of permitted Games
 	 */
 	public List<Game> getPermittedGames(Player p) {
@@ -207,8 +201,7 @@ public class GameMaster {
 	/**
 	 * Get games enabled AND permitted for the given player
 	 * 
-	 * @param p
-	 *            - Player
+	 * @param p - Player
 	 * @return List of permitted Games
 	 */
 	public List<Game> getEnabledAndPermittedGames(Player p) {
@@ -392,9 +385,9 @@ public class GameMaster {
 		registerPermission(
 				"easycheckers.games." + game.getType().configName().toLowerCase() + "." + gamename.toLowerCase(),
 				PermissionDefault.TRUE);
-		
+
 		games.add(game);
-		//game.init();
+		// game.init();
 		return game;
 	}
 
@@ -417,9 +410,9 @@ public class GameMaster {
 		for (Game g : games) {
 			g.forceEnd();
 		}
-		
+
 		games.clear();
-	
+
 		plugin.reloadConfig();
 		config = plugin.getConfig();
 

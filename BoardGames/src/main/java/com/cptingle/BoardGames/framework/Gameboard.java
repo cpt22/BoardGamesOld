@@ -34,12 +34,12 @@ public abstract class Gameboard {
 		this.game = game;
 		this.locationPointMap = HashBiMap.create();
 		init();
-		
+
 		this.anchorPoint = game.getRegion().getPoint(point);
 		this.direction = game.getRegion().getDirection(point);
 
 		orient();
-		
+
 		gameMaterials = new HashMap<>();
 		initMaterials();
 
@@ -84,17 +84,14 @@ public abstract class Gameboard {
 			return;
 		}
 
-		/*if (anchorPoint.getBlockX() == directionPoint.getBlockX()) {
-			if (anchorPoint.getBlockZ() < directionPoint.getBlockZ()) {
-				direction = Direction.Z;
-			}
-		} else if (anchorPoint.getBlockZ() == directionPoint.getBlockZ()) {
-			if (anchorPoint.getBlockX() < directionPoint.getBlockX()) {
-				direction = Direction.X;
-			}
-		} else {
-			direction = Direction.X;
-		}*/
+		/*
+		 * if (anchorPoint.getBlockX() == directionPoint.getBlockX()) { if
+		 * (anchorPoint.getBlockZ() < directionPoint.getBlockZ()) { direction =
+		 * Direction.Z; } } else if (anchorPoint.getBlockZ() ==
+		 * directionPoint.getBlockZ()) { if (anchorPoint.getBlockX() <
+		 * directionPoint.getBlockX()) { direction = Direction.X; } } else { direction =
+		 * Direction.X; }
+		 */
 	}
 
 	/**

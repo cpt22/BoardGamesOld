@@ -6,8 +6,8 @@ import com.cptingle.BoardGames.region.PointCategory;
 import com.cptingle.BoardGames.region.RegionPoint;
 
 public enum TicTacToeRegionPoint implements RegionPoint {
-	BOARD(PointCategory.POINT_DIR, "board", Material.PINK_WOOL), SPAWN(PointCategory.SPAWN, "spawn",
-			Material.BLUE_WOOL);
+	BOARD(PointCategory.POINT_DIR, "board", Material.PINK_WOOL),
+	SPAWN(PointCategory.SPAWN, "spawn", Material.BLUE_WOOL);
 
 	private PointCategory category;
 	private String common;

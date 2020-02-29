@@ -10,11 +10,7 @@ import com.cptingle.BoardGames.commands.Commands;
 import com.cptingle.BoardGames.framework.Game;
 import com.cptingle.BoardGames.messaging.Msg;
 
-@CommandInfo(name = "join", 
-pattern = "j|jo.*|j.*n", 
-usage = "/bg join (<game>)", 
-desc = "join a game", 
-permission = "boardgames.use.join")
+@CommandInfo(name = "join", pattern = "j|jo.*|j.*n", usage = "/bg join (<game>)", desc = "join a game", permission = "boardgames.use.join")
 
 public class JoinCommand implements Command {
 
@@ -31,7 +27,7 @@ public class JoinCommand implements Command {
 
 		Game toGame = Commands.getGameToJoin(gm, p, arg1);
 		if (toGame == null) {
-			//gm.getGlobalMessenger().tell(p, Msg.GAME_DOES_NOT_EXIST);
+			// gm.getGlobalMessenger().tell(p, Msg.GAME_DOES_NOT_EXIST);
 			return true;
 		}
 		// Deny joining from other arenas

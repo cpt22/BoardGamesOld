@@ -103,7 +103,7 @@ public class SetupCommand implements Command {
 
 		private List<String> missing;
 		private String next;
-		
+
 		private boolean wasEditing;
 
 		public Setup(Player player, Game game) {
@@ -139,7 +139,7 @@ public class SetupCommand implements Command {
 
 				missing.addAll(region.getAllMissing());
 			}
-			
+
 			wasEditing = game.inEditMode();
 			if (!wasEditing)
 				game.setEditMode(true);
@@ -409,27 +409,15 @@ public class SetupCommand implements Command {
 			}
 
 			if (point.getCategory() == PointCategory.POINT_DIR) {
-				/*BlockFace facing;
-				switch (p.getFacing()) {
-				case NORTH:
-					facing = BlockFace.SOUTH;
-					break;
-				case SOUTH:
-					facing = BlockFace.NORTH;
-					break;
-				case EAST:
-					facing = BlockFace.WEST;
-					break;
-				case WEST:
-					facing = BlockFace.EAST;
-					break;
-				default:
-					facing = null;
-					break;
-				}*/
+				/*
+				 * BlockFace facing; switch (p.getFacing()) { case NORTH: facing =
+				 * BlockFace.SOUTH; break; case SOUTH: facing = BlockFace.NORTH; break; case
+				 * EAST: facing = BlockFace.WEST; break; case WEST: facing = BlockFace.EAST;
+				 * break; default: facing = null; break; }
+				 */
 				game.getRegion().set(point, p.getLocation(), p.getFacing());
 			} else if (point.getCategory() == PointCategory.POINT_CUBOID) {
-				
+
 			} else {
 				game.getRegion().set(point, p.getLocation());
 			}

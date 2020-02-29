@@ -22,7 +22,7 @@ public class MinesweeperListener extends GameListener {
 			return;
 
 		Location blockLocation = event.getBlock().getLocation();
-		
+
 		if (game.getRegion().contains(blockLocation))
 			event.setCancelled(true);
 
@@ -31,14 +31,14 @@ public class MinesweeperListener extends GameListener {
 		}
 
 	}
-	
+
 	@Override
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (game.inEditMode())
 			return;
 
 		Location blockLocation = event.getBlock().getLocation().add(0, -1, 0);
-		
+
 		if (game.getRegion().contains(blockLocation))
 			event.setCancelled(true);
 

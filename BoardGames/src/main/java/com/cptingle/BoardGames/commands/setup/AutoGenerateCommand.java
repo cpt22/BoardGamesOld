@@ -15,13 +15,7 @@ import com.cptingle.BoardGames.games.sudoku.SudokuAutoGenerator;
 import com.cptingle.BoardGames.games.tictactoe.TicTacToeAutoGenerator;
 import com.cptingle.BoardGames.messaging.Msg;
 
-@CommandInfo(
-	    name    = "autogenerate",
-	    pattern = "auto(\\-)?generate",
-	    usage   = "/bg autogenerate <game> <type>",
-	    desc    = "autogenerate a new game",
-	    permission = "easycheckers.setup.autogenerate"
-	)
+@CommandInfo(name = "autogenerate", pattern = "auto(\\-)?generate", usage = "/bg autogenerate <game> <type>", desc = "autogenerate a new game", permission = "easycheckers.setup.autogenerate")
 public class AutoGenerateCommand implements Command {
 
 	@Override
@@ -29,13 +23,14 @@ public class AutoGenerateCommand implements Command {
 		if (!Commands.isPlayer(sender)) {
 			gm.getGlobalMessenger().tell(sender, Msg.MISC_NOT_FROM_CONSOLE);
 		}
-		
+
 		// Requires game name
-		if (args.length != 2) return false;
-		
+		if (args.length != 2)
+			return false;
+
 		// Unwrap sender
 		Player p = Commands.unwrap(sender);
-		
+
 		Game game = gm.getGameWithName(args[0]);
 		if (game != null) {
 			gm.getGlobalMessenger().tell(sender, "A game with that name already exists!");
@@ -43,13 +38,13 @@ public class AutoGenerateCommand implements Command {
 		}
 		boolean successful = false;
 		GameType type = GameType.fromString(args[1]);
-		
+
 		if (type == null) {
 			gm.getGlobalMessenger().tell(sender, "Invalid game type!");
 			return true;
 		}
-		
-		switch(type) {
+
+		switch (type) {
 		case BATTLESHIP:
 			break;
 		case CHECKERS:
@@ -65,12 +60,12 @@ public class AutoGenerateCommand implements Command {
 			successful = SudokuAutoGenerator.autogenerate(p.getLocation(), 9, args[0], gm.getPlugin());
 			break;
 		}
-		
+
 		if (!successful) {
 			gm.getGlobalMessenger().tell(sender, "Could not auto-generate game.");
 			return true;
 		}
-		
+
 		gm.getGlobalMessenger().tell(sender, "Game with name '" + args[0] + "' generated.");
 		return true;
 	}

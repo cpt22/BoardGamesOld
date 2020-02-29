@@ -8,13 +8,7 @@ import com.cptingle.BoardGames.commands.Command;
 import com.cptingle.BoardGames.commands.CommandInfo;
 import com.cptingle.BoardGames.framework.Game;
 
-@CommandInfo(
-	    name    = "editgame",
-	    pattern = "edit(game)?",
-	    usage   = "/bg editgame <game> (true|false)",
-	    desc    = "set edit mode of a game",
-	    permission = "boardgames.setup.editgame"
-	)
+@CommandInfo(name = "editgame", pattern = "edit(game)?", usage = "/bg editgame <game> (true|false)", desc = "set edit mode of a game", permission = "boardgames.setup.editgame")
 
 public class EditGameCommand implements Command {
 
@@ -50,10 +44,11 @@ public class EditGameCommand implements Command {
 			value = args[1].matches("on|true");
 		}
 		game.setEditMode(value);
-		gm.getGlobalMessenger().tell(sender, "Edit mode for game '" + game.configName()  + "': " + ((game.inEditMode()) ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
-		if (game.inEditMode()) 
+		gm.getGlobalMessenger().tell(sender, "Edit mode for game '" + game.configName() + "': "
+				+ ((game.inEditMode()) ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+		if (game.inEditMode())
 			gm.getGlobalMessenger().tell(sender, "Remember to turn it back off after editing!");
 		return true;
 	}
-	
+
 }

@@ -57,7 +57,7 @@ public class CheckerSquare {
 	public void setPiece(CheckerPiece piece) {
 		if (piece == null)
 			this.sqType = SquareType.EMPTY;
-		else 
+		else
 			this.sqType = SquareType.PIECE;
 		this.piece = piece;
 	}
@@ -67,13 +67,13 @@ public class CheckerSquare {
 		this.location.getBlock().setType(type);
 	}
 
-	/*public void setLocation(Location location) {
-		this.location = location;
-	}*/
+	/*
+	 * public void setLocation(Location location) { this.location = location; }
+	 */
 
-	/*public void setPoint(GridPoint2D point) {
-		this.point = point;
-	}*/
+	/*
+	 * public void setPoint(GridPoint2D point) { this.point = point; }
+	 */
 
 	public PlayerType getPlayer() {
 		if (piece == null)

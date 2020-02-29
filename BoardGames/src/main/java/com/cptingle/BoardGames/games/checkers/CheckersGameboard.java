@@ -62,17 +62,17 @@ public class CheckersGameboard extends Gameboard {
 		for (int x = 0; x < 8; x++) {
 			for (int z = 0; z < 8; z++) {
 				GridPoint2D p = new GridPoint2D(x, z);
-				
+
 				int mod = direction.getModX() != 0 ? direction.getModX() : direction.getModZ();
 				Location l;
 				if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
 					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + -mod * x,
 							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
 				} else {
-					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x,
-							anchorPoint.getBlockY(), anchorPoint.getBlockZ() + mod * z);
+					l = new Location(anchorPoint.getWorld(), anchorPoint.getBlockX() + mod * x, anchorPoint.getBlockY(),
+							anchorPoint.getBlockZ() + mod * z);
 				}
-				
+
 				board[x][z] = new CheckerSquare(game, l, p);
 				locationPointMap.put(p, l);
 

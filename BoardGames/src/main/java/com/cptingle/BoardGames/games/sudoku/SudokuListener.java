@@ -29,18 +29,20 @@ public class SudokuListener extends GameListener {
 		 * (!game.getRegion().contains(event.getClickedBlock().getLocation()))
 		 * event.setCancelled(true);
 		 */
-		Location l = event.getClickedBlock().getLocation();
+		if (event.getClickedBlock() != null) {
 
-		if (game.isRunning()) {
-			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				((SudokuGame) game).getGameboard().leftClickBlock(l, event.getPlayer());
-			} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				((SudokuGame) game).getGameboard().rightClickBlock(l, event.getPlayer());
+			Location l = event.getClickedBlock().getLocation();
+
+			if (game.isRunning()) {
+				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					((SudokuGame) game).getGameboard().leftClickBlock(l, event.getPlayer());
+				} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					((SudokuGame) game).getGameboard().rightClickBlock(l, event.getPlayer());
+				}
 			}
+			if (game.getRegion().contains(l))
+				event.setCancelled(true);
 		}
-
-		if (game.getRegion().contains(l))
-			event.setCancelled(true);
 	}
 
 	@Override
