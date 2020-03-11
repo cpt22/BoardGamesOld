@@ -16,6 +16,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 public abstract class Gameboard {
+
 	// General Stuff
 	protected Game game;
 

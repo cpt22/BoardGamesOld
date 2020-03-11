@@ -6,7 +6,7 @@ import com.cptingle.BoardGames.GameMaster;
 import com.cptingle.BoardGames.commands.Command;
 import com.cptingle.BoardGames.commands.CommandInfo;
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.AutoGenerator;
+import com.cptingle.BoardGames.games.AutoGeneratorHelper;
 import com.cptingle.BoardGames.messaging.Msg;
 
 @CommandInfo(name = "autodegenerate", pattern = "auto(\\-)?degenerate", usage = "/bg autodegenerate <game>", desc = "autodegenerate an existing game", permission = "boardgames.setup.autodegenerate")
@@ -31,7 +31,7 @@ public class AutoDegenerateCommand implements Command {
 			return true;
 		}
 
-		if (!AutoGenerator.autoDegenerate(args[0], gm.getPlugin(), true)) {
+		if (!AutoGeneratorHelper.autoDegenerate(args[0], gm.getPlugin(), true)) {
 			gm.getGlobalMessenger().tell(sender, "Could not degenerate game.");
 			return true;
 		}

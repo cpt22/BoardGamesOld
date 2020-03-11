@@ -7,12 +7,12 @@ import org.bukkit.World;
 import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.GameMaster;
 import com.cptingle.BoardGames.framework.Game;
-import com.cptingle.BoardGames.games.AutoGenerator;
+import com.cptingle.BoardGames.games.AutoGeneratorHelper;
 import com.cptingle.BoardGames.region.GameRegion;
 
 public class MinesweeperAutoGenerator {
 	public static boolean autogenerate(Location loc, int radius, String name, BoardGames plugin) {
-		AutoGenerator.storePatch(loc, radius, 25, 1, name, plugin);
+		AutoGeneratorHelper.storePatch(loc, radius, 25, 1, name, plugin);
 		GameMaster gm = plugin.getGameMaster();
 		World world = loc.getWorld();
 		Game game = gm.createGameNode(name, "minesweeper", world);

@@ -15,7 +15,7 @@ import org.bukkit.World;
 import com.cptingle.BoardGames.BoardGames;
 import com.cptingle.BoardGames.util.EntityPosition;
 
-public class AutoGenerator {
+public class AutoGeneratorHelper {
 	public static final String sep = File.separator;
 
 	/*
